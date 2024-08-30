@@ -1,45 +1,152 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    TextField,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
 } from "@mui/material";
 
-export const AddUser = ({ onAddUser }) => {
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [mobile, setMobile] = useState("");
+export const AddUser = ({ onAddUser, userToEdit, onClose }) => {
+  const [open, setOpen] = useState(true);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [mobile, setMobile] = useState("");
 
-    const handleAddUser = () => {
-        const newUser = { name, email, mobile };
-        onAddUser(newUser);
-        setName("");
-        setEmail("");
-        setMobile("");
-    };
+  useEffect(() => {
+    if (userToEdit) {
+      setName(userToEdit.name);
+      setEmail(userToEdit.email);
+      setMobile(userToEdit.mobile);
+    }
+  }, [userToEdit]);
 
-    return (
-        <Dialog open={true} onClose={() => { }} sx={{ "& .MuiPaper-root": { backgroundColor: "#1f1d2b", color: "white", width: "600px" }, }}>
-            <DialogTitle sx={{ fontWeight: "bold" }}>Add New User</DialogTitle>
-            <DialogContent>
-                <form>
-                    <div class="mb-3">
-                        <label htmlFor="name" class="form-label">Email address</label>
-                        <input type="email" class="form-control rounded-pill" />
-                    </div>
-                    <div class="mb-3">
-                        <label htmlFor="name" class="form-label">Password</label>
-                        <input type="password" class="form-control rounded-pill" />
-                    </div>
-                </form>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={() => onAddUser(null)}>Cancel</Button>
-                <Button onClick={handleAddUser}>Add User</Button>
-            </DialogActions>
-        </Dialog>
-    );
+  const handleAddOrUpdate = () => {
+    const user = { name, email, mobile, id: userToEdit ? userToEdit.id : null };
+    onAddUser(user);
+    handleClose();
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    onClose();
+  };
+
+  return (
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      sx={{
+        "& .MuiPaper-root": {
+          backgroundColor: "#1f1d2b",
+          color: "white",
+          width: "800px",
+          padding: "20px",
+          border: "2px solid #90BE6D",
+          borderRadius: "10px",
+        },
+      }}
+    >
+      <DialogTitle
+        sx={{ fontWeight: "bold", textAlign: "center", marginBottom: "20px" }}
+      >
+        {userToEdit ? "Edit Manager" : "Add Manager"}
+      </DialogTitle>
+      <DialogContent>
+        <form style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+            <label htmlFor="name" style={{ flex: 1 }}>
+              Name
+            </label>
+            <TextField
+              id="name"
+              variant="outlined"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              size="small"
+              sx={{
+                flex: 2,
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "50px",
+                  backgroundColor: "white",
+                },
+              }}
+            />
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+            <label htmlFor="email" style={{ flex: 1 }}>
+              Email
+            </label>
+            <TextField
+              id="email"
+              type="email"
+              variant="outlined"
+              size="small"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              sx={{
+                flex: 2,
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "50px",
+                  backgroundColor: "white",
+                },
+              }}
+            />
+          </div>
+
+          <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+            <label htmlFor="mobile" style={{ flex: 1 }}>
+              Mobile Number
+            </label>
+            <TextField
+              id="mobile"
+              variant="outlined"
+              size="small"
+              value={mobile}
+              onChange={(e) => setMobile(e.target.value)}
+              sx={{
+                flex: 2,
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "50px",
+                  backgroundColor: "white",
+                },
+              }}
+            />
+          </div>
+        </form>
+      </DialogContent>
+      <DialogActions
+        sx={{
+          justifyContent: "center",
+          marginTop: "20px",
+        }}
+      >
+        <Button
+          onClick={handleAddOrUpdate}
+          sx={{
+            backgroundColor: "#FF7CA3",
+            color: "white",
+            "&:hover": { backgroundColor: "#FF5A70" },
+            borderRadius: "20px",
+            padding: "10px 20px",
+          }}
+        >
+          {userToEdit ? "Update User" : "Add User"}
+        </Button>
+        <Button
+          onClick={handleClose}
+          sx={{
+            backgroundColor: "#90BE6D",
+            color: "white",
+            "&:hover": { backgroundColor: "#74a85e" },
+            borderRadius: "20px",
+            padding: "10px 20px",
+          }}
+        >
+          Cancel
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
 };

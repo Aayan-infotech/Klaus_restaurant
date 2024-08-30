@@ -10,7 +10,11 @@ import {
   TableRow,
   Typography,
   Paper,
-  Dialog, DialogContent, DialogTitle, DialogContentText, DialogActions
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -19,15 +23,15 @@ import {
   faPenToSquare,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
-import { AddUser } from '../../src/components/AddUser'
+import { AddUser } from "../../src/components/AddUser";
 
 export const ManagerManagement = () => {
   const [managers, setManagers] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedManager, setSelectedManager] = useState(null);
   const [openAddUserDialog, setOpenAddUserDialog] = useState(false);
+  const [editingUser, setEditingUser] = useState(null);
 
-  // Handle dialog open
   const handleClickOpen = (manager) => {
     setSelectedManager(manager);
     setOpen(true);
@@ -39,15 +43,38 @@ export const ManagerManagement = () => {
   };
 
   const handleDelete = () => {
-    setManagers((prevManagers) =>
-      prevManagers.filter((manager) => manager.id !== selectedManager.id)
-    );
-    handleClose();
+    if (selectedManager) {
+      setManagers((prevManagers) =>
+        prevManagers.filter((manager) => manager.id !== selectedManager.id)
+      );
+      handleClose();
+    } else {
+      console.error("No manager selected for deletion.");
+    }
   };
 
-  const handleAddUser = (newUser) => {
-    setManagers((prevManagers) => [...prevManagers, { ...newUser, id: prevManagers.length + 1 }]);
+  const handleAddUser = (user) => {
+    if (user) {
+      if (user.id) {
+        setManagers((prevManagers) =>
+          prevManagers.map((manager) =>
+            manager.id === user.id ? { ...user } : manager
+          )
+        );
+      } else {
+        setManagers((prevManagers) => [
+          ...prevManagers,
+          { ...user, id: prevManagers.length + 1 },
+        ]);
+      }
+    }
     setOpenAddUserDialog(false);
+    setEditingUser(null);
+  };
+
+  const handleEdit = (manager) => {
+    setEditingUser(manager);
+    setOpenAddUserDialog(true);
   };
 
   return (
@@ -109,6 +136,7 @@ export const ManagerManagement = () => {
                 >
                   <Button
                     variant="outlined"
+                    onClick={() => handleClickOpen(manager)}
                     sx={{
                       minWidth: "auto",
                       width: "40px",
@@ -134,6 +162,7 @@ export const ManagerManagement = () => {
                   </Button>
                   <Button
                     variant="outlined"
+                    onClick={() => handleEdit(manager)}
                     sx={{
                       minWidth: "auto",
                       width: "40px",
@@ -159,7 +188,7 @@ export const ManagerManagement = () => {
                   </Button>
                   <Button
                     variant="outlined"
-                    onClick={() => handleClickOpen(manager)}
+                    onClick={() => handleDelete(manager)}
                     sx={{
                       minWidth: "auto",
                       width: "40px",
@@ -188,87 +217,61 @@ export const ManagerManagement = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
       <Dialog
-        onClose={handleClose}
         open={open}
+        onClose={handleClose}
         sx={{
           "& .MuiPaper-root": {
             backgroundColor: "#1f1d2b",
-            width: "300px",
-            height: "300px",
-            padding: "0",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
+            color: "white",
+            width: "400px",
+            padding: "20px",
+            border: "2px solid #90BE6D",
+            borderRadius: "10px",
           },
         }}
       >
-        <DialogContent
-          sx={{
-            border: "1px solid #90BE6D",
-            borderRadius: "20px",
-            width: "250px",
-            height: "250px",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <DialogTitle
-            sx={{
-              color: "white",
-              textAlign: "center",
-              padding: "0",
-              marginBottom: "8px",
-            }}
-          >
-            Delete?
-          </DialogTitle>
-          <DialogContentText
-            sx={{
-              color: "white",
-              textAlign: "center",
-              marginBottom: "16px",
-            }}
-          >
-            Are You Sure?
+        <DialogTitle sx={{ textAlign: "center", fontWeight: "bold" }}>
+          Manager Details
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText sx={{ color: "white" }}>
+            <strong>Name:</strong> {selectedManager?.name}
           </DialogContentText>
-          <DialogActions
+          <DialogContentText sx={{ color: "white" }}>
+            <strong>Email:</strong> {selectedManager?.email}
+          </DialogContentText>
+          <DialogContentText sx={{ color: "white" }}>
+            <strong>Mobile:</strong> {selectedManager?.mobile}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ justifyContent: "center" }}>
+          <Button
+            onClick={handleClose}
             sx={{
-              justifyContent: "center",
-              width: "100%",
-              padding: "0",
+              backgroundColor: "#90BE6D",
+              color: "white",
+              "&:hover": { backgroundColor: "#74a85e" },
+              borderRadius: "20px",
+              padding: "10px 20px",
             }}
           >
-            <Button
-              onClick={handleDelete}
-              sx={{
-                backgroundColor: "#FF7CA3",
-                color: "white",
-                "&:hover": { backgroundColor: "#FF5A70" },
-                marginRight: "8px",
-              }}
-            >
-              Yes
-            </Button>
-            <Button
-              onClick={handleClose}
-              sx={{
-                backgroundColor: "#90BE6D",
-                color: "white",
-                "&:hover": { backgroundColor: "#74a85e" },
-              }}
-            >
-              No
-            </Button>
-          </DialogActions>
-        </DialogContent>
+            Close
+          </Button>
+        </DialogActions>
       </Dialog>
-      <Dialog open={openAddUserDialog} onClose={() => setOpenAddUserDialog(false)}
-        sx={{ "& .MuiPaper-root": { backgroundColor: "#1f1d2b",  width: "600px" }, }}>
-        <AddUser onAddUser={handleAddUser} />
-      </Dialog>
+
+      {openAddUserDialog && (
+        <AddUser
+          onAddUser={handleAddUser}
+          userToEdit={editingUser}
+          onClose={() => {
+            setOpenAddUserDialog(false);
+            setEditingUser(null);
+          }}
+        />
+      )}
     </Box>
   );
 };

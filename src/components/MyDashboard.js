@@ -10,14 +10,22 @@ import {
   Avatar,
 } from "@mui/material";
 import saladImage from "../../src/assets/dashboard/image-removebg-preview-photoaidcom-cropped.png";
-import menu_1 from "../../src/assets/dashboard/menu1.png"
+import menu_1 from "../../src/assets/dashboard/menu1.png";
+import { useNavigate } from "react-router-dom";
 
 const MyDashboard = () => {
+  const navigate = useNavigate();
+
   const statsData = [
     { title: "Total Manager", value: 55 },
     { title: "Total Menu", value: 30 },
     { title: "Total Allergens", value: 44 },
   ];
+
+  const handleSeeClick = () => {
+    navigate("/all-menu-items");
+  };
+
   return (
     <Box>
       <Grid container spacing={4}>
@@ -94,7 +102,9 @@ const MyDashboard = () => {
           </Card>
         </Grid>
         <Grid item xs={8}>
-          <Box sx={{ backgroundColor: "#1f1d2b", color: "white", padding: "6px" }}>
+          <Box
+            sx={{ backgroundColor: "#1f1d2b", color: "white", padding: "6px" }}
+          >
             <Typography variant="h6" sx={{ mb: 2 }}>
               Recent Menu Listed
             </Typography>
@@ -106,16 +116,10 @@ const MyDashboard = () => {
                 paddingX: 1,
               }}
             >
-              <Typography
-                variant="body1"
-                sx={{ flex: 1, fontWeight: "bold" }}
-              >
+              <Typography variant="body1" sx={{ flex: 1, fontWeight: "bold" }}>
                 Image
               </Typography>
-              <Typography
-                variant="body1"
-                sx={{ flex: 2, fontWeight: "bold" }}
-              >
+              <Typography variant="body1" sx={{ flex: 2, fontWeight: "bold" }}>
                 Name
               </Typography>
               <Typography
@@ -136,28 +140,28 @@ const MyDashboard = () => {
                 paddingX: 1,
               }}
             >
-              <Typography
-                variant="body1"
-                sx={{ flex: 1, fontWeight: "bold" }}
-              >
-                <Avatar src={menu_1} variant="rounded" sx={{ width: 40, height: 40 }} />
+              <Typography variant="body1" sx={{ flex: 1, fontWeight: "bold" }}>
+                <Avatar
+                  src={menu_1}
+                  variant="rounded"
+                  sx={{ width: 40, height: 40 }}
+                />
               </Typography>
-              <Typography
-                variant="body1"
-                sx={{ flex: 2, fontWeight: "bold" }}
-              >
+              <Typography variant="body1" sx={{ flex: 2, fontWeight: "bold" }}>
                 Menu 1
               </Typography>
               <Button
                 variant="outlined"
+                onClick={handleSeeClick}
                 sx={{
-                  color: '#567241',
-                  textTransform: 'none',
+                  color: "#567241",
+                  textTransform: "none",
                   fontWeight: "bold",
-                  borderColor: '#567241'
+                  borderColor: "#567241",
                 }}
               >
-                See
+                {" "}
+                See{" "}
               </Button>
             </Box>
           </Box>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -19,67 +19,95 @@ import {
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
-
-// Dummy data for allergens
-const initialManagers = [
-  {
-    id: 1,
-    name: "Allergens 1",
-    email: "Lorem ipsum dolor sit amet",
-    status: true,
-  },
-  {
-    id: 2,
-    name: "Allergens 2",
-    email: "Lorem ipsum dolor sit amet",
-    status: false,
-  },
-  {
-    id: 3,
-    name: "Allergens 3",
-    email: "Lorem ipsum dolor sit amet",
-    status: true,
-  },
-  {
-    id: 4,
-    name: "Allergens 4",
-    email: "Lorem ipsum dolor sit amet",
-    status: false,
-  },
-];
+import axios from "axios";
+import { AddAllergens } from "./AddAllergens";
 
 export const AllergensManagement = () => {
-  const [managers, setManagers] = useState(initialManagers);
+  const [allergens, setAllergens] = useState([]);
   const [open, setOpen] = useState(false);
-  const [selectedManager, setSelectedManager] = useState(null);
+  const [selectedAllergen, setSelectedAllergen] = useState(null);
+  const [openAddAllergensDialog, setOpenAddAllergensDialog] = useState(false);
+  const [editingAllergen, setEditingAllergen] = useState(null);
 
-  // Handle status toggle change
-  const handleStatusChange = (id) => {
-    setManagers((prevManagers) =>
-      prevManagers.map((manager) =>
-        manager.id === id ? { ...manager, status: !manager.status } : manager
-      )
-    );
+  useEffect(() => {
+    // Fetch allergens from API
+    const fetchAllergens = async () => {
+      try {
+        const response = await axios.get("/api/allergens");
+        setAllergens(response.data);
+      } catch (error) {
+        console.error("Error fetching allergens:", error);
+      }
+    };
+
+    fetchAllergens();
+  }, []);
+
+  const handleStatusChange = async (id) => {
+    try {
+      await axios.patch(`/api/allergens/${id}`, {
+        status: !allergens.find((allergen) => allergen.id === id).status,
+      });
+      setAllergens(
+        allergens.map((allergen) =>
+          allergen.id === id
+            ? { ...allergen, status: !allergen.status }
+            : allergen
+        )
+      );
+    } catch (error) {
+      console.error("Error updating allergen status:", error);
+    }
   };
 
-  // Handle dialog open
-  const handleClickOpen = (manager) => {
-    setSelectedManager(manager);
+  const handleClickOpen = (allergen) => {
+    setSelectedAllergen(allergen);
     setOpen(true);
   };
 
-  // Handle dialog close
   const handleClose = () => {
     setOpen(false);
-    setSelectedManager(null);
+    setSelectedAllergen(null);
   };
 
-  // Handle delete action
-  const handleDelete = () => {
-    setManagers((prevManagers) =>
-      prevManagers.filter((manager) => manager.id !== selectedManager.id)
-    );
-    handleClose();
+  const handleDelete = async () => {
+    if (selectedAllergen) {
+      try {
+        await axios.delete(`/api/allergens/${selectedAllergen.id}`);
+        setAllergens(
+          allergens.filter((allergen) => allergen.id !== selectedAllergen.id)
+        );
+        handleClose();
+      } catch (error) {
+        console.error("Error deleting allergen:", error);
+      }
+    } else {
+      console.error("No allergen selected for deletion.");
+    }
+  };
+
+  const handleAddAllergen = async (allergen) => {
+    try {
+      if (allergen.id) {
+        // Update allergen
+        await axios.put(`/api/allergens/${allergen.id}`, allergen);
+        setAllergens(
+          allergens.map((existingAllergen) =>
+            existingAllergen.id === allergen.id
+              ? { ...allergen }
+              : existingAllergen
+          )
+        );
+      } else {
+        // Add new allergen
+        const response = await axios.post("/api/allergens", allergen);
+        setAllergens([...allergens, response.data]);
+      }
+      setOpenAddAllergensDialog(false);
+      setEditingAllergen(null);
+    } catch (error) {
+      console.error("Error saving allergen:", error);
+    }
   };
 
   return (
@@ -96,6 +124,7 @@ export const AllergensManagement = () => {
         </Typography>
         <Button
           variant="outlined"
+          onClick={() => setOpenAddAllergensDialog(true)}
           sx={{
             color: "#567241",
             fontWeight: "bold",
@@ -116,24 +145,26 @@ export const AllergensManagement = () => {
               <TableCell align="center" sx={{ color: "white" }}>
                 SI No
               </TableCell>
-              <TableCell sx={{ color: "white" }}>Allergens Name</TableCell>
+              <TableCell sx={{ color: "white" }}>Allergen Name</TableCell>
               <TableCell sx={{ color: "white" }}>Description</TableCell>
               <TableCell sx={{ color: "white" }}>Status</TableCell>
               <TableCell sx={{ color: "white" }}>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody sx={{ backgroundColor: "#272437" }}>
-            {managers.map((manager) => (
-              <TableRow key={manager.id}>
+            {allergens.map((allergen) => (
+              <TableRow key={allergen.id}>
                 <TableCell align="center" sx={{ color: "white" }}>
-                  {manager.id}
+                  {allergen.id}
                 </TableCell>
-                <TableCell sx={{ color: "white" }}>{manager.name}</TableCell>
-                <TableCell sx={{ color: "white" }}>{manager.email}</TableCell>
+                <TableCell sx={{ color: "white" }}>{allergen.name}</TableCell>
+                <TableCell sx={{ color: "white" }}>
+                  {allergen.description}
+                </TableCell>
                 <TableCell align="center" sx={{ color: "white" }}>
                   <Switch
-                    checked={manager.status}
-                    onChange={() => handleStatusChange(manager.id)}
+                    checked={allergen.status}
+                    onChange={() => handleStatusChange(allergen.id)}
                     sx={{
                       "& .MuiSwitch-switchBase.Mui-checked": {
                         color: "#90BE6D",
@@ -171,6 +202,10 @@ export const AllergensManagement = () => {
                         backgroundColor: "rgba(150, 255, 124, 0.1)",
                       },
                     }}
+                    onClick={() => {
+                      setEditingAllergen(allergen);
+                      setOpenAddAllergensDialog(true);
+                    }}
                   >
                     <FontAwesomeIcon
                       icon={faPenToSquare}
@@ -179,7 +214,7 @@ export const AllergensManagement = () => {
                   </Button>
                   <Button
                     variant="outlined"
-                    onClick={() => handleClickOpen(manager)}
+                    onClick={() => handleClickOpen(allergen)}
                     sx={{
                       minWidth: "auto",
                       width: "40px",
@@ -252,7 +287,7 @@ export const AllergensManagement = () => {
               marginBottom: "16px",
             }}
           >
-            Are You Sure?
+            Are you sure?
           </DialogContentText>
           <DialogActions
             sx={{
@@ -284,6 +319,29 @@ export const AllergensManagement = () => {
             </Button>
           </DialogActions>
         </DialogContent>
+      </Dialog>
+
+      {/* Add Allergen Dialog */}
+      <Dialog
+        onClose={() => setOpenAddAllergensDialog(false)}
+        open={openAddAllergensDialog}
+        sx={{
+          "& .MuiPaper-root": {
+            backgroundColor: "#1f1d2b",
+            color: "white",
+            width: "800px",
+            padding: "20px",
+            border: "2px solid #90BE6D",
+            borderRadius: "10px",
+          },
+        }}
+      >
+        <DialogTitle
+          sx={{ color: "white", textAlign: "center", marginBottom: "16px" }}
+        >
+          {editingAllergen ? "Edit Allergen" : "Add Allergen"}
+        </DialogTitle>
+        <AddAllergens onSave={handleAddAllergen} allergen={editingAllergen} />
       </Dialog>
     </Box>
   );
