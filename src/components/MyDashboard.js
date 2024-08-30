@@ -154,12 +154,7 @@ const MyDashboard = () => {
                   color: '#567241',
                   textTransform: 'none',
                   fontWeight: "bold",
-                  borderColor: '#567241',
-                  "&:hover": {
-                    borderColor: "#567241",
-                    backgroundColor: "#567241",
-                    color: '#567241',
-                  },
+                  borderColor: '#567241'
                 }}
               >
                 See

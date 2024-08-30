@@ -19,47 +19,37 @@ import {
   faPenToSquare,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
-
-const initialManagers = [
-  { id: 1, name: "Jhon Xyz", email: "Jhon@gmail.com", mobile: "987654466666" },
-  {
-    id: 2,
-    name: "Julia Thomas",
-    email: "Julia@gmail.com",
-    mobile: "666666987654",
-  },
-  {
-    id: 3,
-    name: "Marry james",
-    email: "Marryjames@gmail.com",
-    mobile: "987654466666",
-  },
-  { id: 4, name: "Mark", email: "Mark@gmail.com", mobile: "666666987654" },
-];
+import { AddUser } from '../../src/components/AddUser'
 
 export const ManagerManagement = () => {
-  const [managers, setManagers] = useState(initialManagers);
+  const [managers, setManagers] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedManager, setSelectedManager] = useState(null);
+  const [openAddUserDialog, setOpenAddUserDialog] = useState(false);
+
   // Handle dialog open
   const handleClickOpen = (manager) => {
     setSelectedManager(manager);
     setOpen(true);
   };
 
-  // Handle dialog close
   const handleClose = () => {
     setOpen(false);
     setSelectedManager(null);
   };
 
-  // Handle delete action
   const handleDelete = () => {
     setManagers((prevManagers) =>
       prevManagers.filter((manager) => manager.id !== selectedManager.id)
     );
     handleClose();
   };
+
+  const handleAddUser = (newUser) => {
+    setManagers((prevManagers) => [...prevManagers, { ...newUser, id: prevManagers.length + 1 }]);
+    setOpenAddUserDialog(false);
+  };
+
   return (
     <Box>
       <Box
@@ -74,6 +64,7 @@ export const ManagerManagement = () => {
         </Typography>
         <Button
           variant="outlined"
+          onClick={() => setOpenAddUserDialog(true)}
           sx={{
             color: "#567241",
             fontWeight: "bold",
@@ -273,6 +264,10 @@ export const ManagerManagement = () => {
             </Button>
           </DialogActions>
         </DialogContent>
+      </Dialog>
+      <Dialog open={openAddUserDialog} onClose={() => setOpenAddUserDialog(false)}
+        sx={{ "& .MuiPaper-root": { backgroundColor: "#1f1d2b",  width: "600px" }, }}>
+        <AddUser onAddUser={handleAddUser} />
       </Dialog>
     </Box>
   );
