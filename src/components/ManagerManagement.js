@@ -10,11 +10,6 @@ import {
   TableRow,
   Typography,
   Paper,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogContentText,
-  DialogActions,
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -36,8 +31,6 @@ export const ManagerManagement = () => {
   const navigate = useNavigate();
 
   const handleClickOpen = (manager) => {
-    // setSelectedManager(manager);
-    // setOpen(true);
     navigate('/manager-details', { state: { manager } });
   };
 
@@ -46,16 +39,12 @@ export const ManagerManagement = () => {
     setSelectedManager(null);
   };
 
-  const handleDelete = () => {
-    if (selectedManager) {
-      setManagers((prevManagers) =>
-        prevManagers.filter((manager) => manager.id !== selectedManager.id)
-      );
-      handleClose();
-    } else {
-      console.error("No manager selected for deletion.");
-    }
+  const handleDelete = (manager_id) => {
+    setManagers((prevManagers) =>
+      prevManagers.filter((manager) => manager.id !== manager_id)
+    );
   };
+  
 
   const handleAddUser = (user) => {
     if (user) {
@@ -192,7 +181,7 @@ export const ManagerManagement = () => {
                   </Button>
                   <Button
                     variant="outlined"
-                    onClick={() => handleDelete(manager)}
+                    onClick={() => handleDelete(manager.id)}
                     sx={{
                       minWidth: "auto",
                       width: "40px",
