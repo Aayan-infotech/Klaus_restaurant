@@ -7,7 +7,12 @@ import { ManagerManagement } from "./components/ManagerManagement";
 import { MenuManagement } from "./components/MenuManagement";
 import { AllergensManagement } from "./components/AllergensManagement";
 import { Home } from "./components/Home";
+import { AllMenuItems } from "./components/AllMenuItems";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { SubMenuItemsDetails } from "./components/SubMenuItemsDetails";
+import { MenuManagementDetails } from "./components/MenuManagementDetails";
+import { RecentMenuDetails } from "./components/RecentMenuDetails";
+import { ManagerDetails } from "./components/ManagerDetails";
 
 const drawerWidth = 300;
 
@@ -30,6 +35,11 @@ function App() {
                     <Route path="/manager-management" element={<ManagerManagement />} />
                     <Route path="/menu-management" element={<MenuManagement />} />
                     <Route path="/allergens-management" element={<AllergensManagement />} />
+                    <Route path="/recent-menu-list" element={<AllMenuItems />} />
+                    <Route path="/recent-submenu/:id" element={<SubMenuItemsDetails />} />
+                    <Route path="/menu-details" element={<MenuManagementDetails />} />
+                    <Route path="/recent-menu-details" element={<RecentMenuDetails />} />
+                    <Route path="/manager-details" element={<ManagerDetails />} />
                   </Routes>
                 </main>
               </div>

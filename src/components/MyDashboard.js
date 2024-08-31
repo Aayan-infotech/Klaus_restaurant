@@ -10,14 +10,23 @@ import {
   Avatar,
 } from "@mui/material";
 import saladImage from "../../src/assets/dashboard/image-removebg-preview-photoaidcom-cropped.png";
-import menu_1 from "../../src/assets/dashboard/menu1.png"
+import menu_1 from "../../src/assets/dashboard/menu1.png";
+import menu2 from "../../src/assets/menuitems/menu2.png";
+import { useNavigate } from "react-router-dom";
 
 const MyDashboard = () => {
+  const navigate = useNavigate();
+
   const statsData = [
     { title: "Total Manager", value: 55 },
     { title: "Total Menu", value: 30 },
     { title: "Total Allergens", value: 44 },
   ];
+
+  const handleSeeClick = () => {
+    navigate("/recent-menu-list");
+  };
+
   return (
     <Box>
       <Grid container spacing={4}>
@@ -45,31 +54,39 @@ const MyDashboard = () => {
       <Grid container spacing={4} sx={{ mt: 5 }}>
         <Grid item xs={4} container justifyContent="center" alignItems="center">
           <Card
-            sx={{
-              backgroundColor: "#567241",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: 2,
+            style={{
               maxWidth: 220,
               width: 220,
               height: 250,
+              borderRadius: "20px",
+              backgroundColor: "#567241",
+              textAlign: "center",
+              color: "white",
               position: "relative",
+              overflow: "visible"
             }}
           >
-            <Avatar
-              src={saladImage}
-              sx={{
-                width: 120,
-                height: 120,
+            <div
+              style={{
                 position: "absolute",
-                top: "-40px",
+                top: "-15px",
                 left: "15%",
                 transform: "translateX(-50%)",
+                width: "100px",
+                height: "100px",
               }}
-            />
-
+            >
+              <img
+                src={saladImage}
+                alt="menu2"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                }}
+              />
+            </div>
             <CardContent sx={{ mt: 6 }}>
               <Box
                 sx={{
@@ -78,6 +95,7 @@ const MyDashboard = () => {
                   alignItems: "center",
                   justifyContent: "center",
                   gap: 1,
+                  marginTop:"50px"
                 }}
               >
                 <Typography
@@ -94,7 +112,9 @@ const MyDashboard = () => {
           </Card>
         </Grid>
         <Grid item xs={8}>
-          <Box sx={{ backgroundColor: "#1f1d2b", color: "white", padding: "6px" }}>
+          <Box
+            sx={{ backgroundColor: "#1f1d2b", color: "white", padding: "6px" }}
+          >
             <Typography variant="h6" sx={{ mb: 2 }}>
               Recent Menu Listed
             </Typography>
@@ -106,16 +126,10 @@ const MyDashboard = () => {
                 paddingX: 1,
               }}
             >
-              <Typography
-                variant="body1"
-                sx={{ flex: 1, fontWeight: "bold" }}
-              >
+              <Typography variant="body1" sx={{ flex: 1, fontWeight: "bold" }}>
                 Image
               </Typography>
-              <Typography
-                variant="body1"
-                sx={{ flex: 2, fontWeight: "bold" }}
-              >
+              <Typography variant="body1" sx={{ flex: 2, fontWeight: "bold" }}>
                 Name
               </Typography>
               <Typography
@@ -136,28 +150,28 @@ const MyDashboard = () => {
                 paddingX: 1,
               }}
             >
-              <Typography
-                variant="body1"
-                sx={{ flex: 1, fontWeight: "bold" }}
-              >
-                <Avatar src={menu_1} variant="rounded" sx={{ width: 40, height: 40 }} />
+              <Typography variant="body1" sx={{ flex: 1, fontWeight: "bold" }}>
+                <Avatar
+                  src={menu_1}
+                  variant="rounded"
+                  sx={{ width: 40, height: 40 }}
+                />
               </Typography>
-              <Typography
-                variant="body1"
-                sx={{ flex: 2, fontWeight: "bold" }}
-              >
+              <Typography variant="body1" sx={{ flex: 2, fontWeight: "bold" }}>
                 Menu 1
               </Typography>
               <Button
                 variant="outlined"
+                onClick={handleSeeClick}
                 sx={{
-                  color: '#567241',
-                  textTransform: 'none',
+                  color: "#567241",
+                  textTransform: "none",
                   fontWeight: "bold",
-                  borderColor: '#567241'
+                  borderColor: "#567241",
                 }}
               >
-                See
+                {" "}
+                See{" "}
               </Button>
             </Box>
           </Box>

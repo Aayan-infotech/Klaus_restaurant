@@ -1,3 +1,38 @@
-.home-btn-success {
-  background-color: #90BE6D;
+/* Custom CSS for SubMenuItemsDetails */
+
+.menu-details {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  background-color: #1f1d2b;
+  border-radius: 10px;
+  color: white;
+}
+
+.menu-details img {
+  width: 100px;
+  height: 100px;
+  border-radius: 10px;
+  margin-right: 16px;
+}
+
+.menu-details .info {
+  color: #8bc34a;
+}
+
+.menu-items {
+  margin-top: 32px;
+}
+
+.menu-item-card {
+  background-color: #1f1d2b;
+  color: white;
+  border-radius: 10px;
+  text-align: center;
+  padding: 16px;
+}
+
+.menu-item-card img {
+  width: 100%;
+  border-radius: 10px;
 }
