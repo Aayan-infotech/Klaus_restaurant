@@ -7,10 +7,12 @@ export const Logout = ({ open, handleClose }) => {
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        // Perform any logout logic here, e.g., clear local storage, context, etc.
-        handleClose();
         navigate('/');
     };
+
+    const handleCloses = () => {
+        handleClose();
+    }
 
     return (
         <Dialog
@@ -39,13 +41,13 @@ export const Logout = ({ open, handleClose }) => {
                 }}
             >
                 <DialogTitle
-                variant='h4'
+                    variant='h4'
                     sx={{
                         color: "white",
                         textAlign: "center",
                         padding: "0",
                         marginBottom: "8px",
-                        fontWeight:"bold"
+                        fontWeight: "bold"
                     }}
                 >
                     Log Out
@@ -67,7 +69,7 @@ export const Logout = ({ open, handleClose }) => {
                     }}
                 >
                     <Button
-                        onClick={handleClose}
+                        onClick={handleLogout}
                         sx={{
                             backgroundColor: "#FF7CA3",
                             color: "white",
@@ -78,7 +80,7 @@ export const Logout = ({ open, handleClose }) => {
                         Yes
                     </Button>
                     <Button
-                        onClick={handleLogout}
+                        onClick={handleCloses}
                         sx={{
                             backgroundColor: "#90BE6D",
                             color: "white",
