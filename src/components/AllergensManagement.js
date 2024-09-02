@@ -49,7 +49,7 @@ export const AllergensManagement = () => {
         status: !allergens.find((allergen) => allergen.id === id).status,
       });
       setAllergens(
-        allergens.map((allergen) =>
+        allergens?.map((allergen) =>
           allergen.id === id
             ? { ...allergen, status: !allergen.status }
             : allergen
@@ -92,7 +92,7 @@ export const AllergensManagement = () => {
         // Update allergen
         await axios.put(`/api/allergens/${allergen.id}`, allergen);
         setAllergens(
-          allergens.map((existingAllergen) =>
+          allergens?.map((existingAllergen) =>
             existingAllergen.id === allergen.id
               ? { ...allergen }
               : existingAllergen
@@ -152,7 +152,7 @@ export const AllergensManagement = () => {
             </TableRow>
           </TableHead>
           <TableBody sx={{ backgroundColor: "#272437" }}>
-            {allergens.map((allergen) => (
+            {allergens?.map((allergen) => (
               <TableRow key={allergen.id}>
                 <TableCell align="center" sx={{ color: "white" }}>
                   {allergen.id}
