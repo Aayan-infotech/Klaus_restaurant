@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
 
@@ -10,9 +10,9 @@ export const Logout = ({ open, handleClose }) => {
         navigate('/');
       };    
 
-    const handleCloses = () => {
-        handleClose();
-    }
+    // const handleCloses = () => {
+    //     handleClose();
+    // }
 
     return (
         <Dialog
