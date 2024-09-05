@@ -17,7 +17,7 @@ export const AllMenuItems = () => {
   const navigate = useNavigate();
 
   const handleCardClick = (category) => {
-    navigate(`/submenu-items/${category.id}`, { state: { category } });
+    navigate(`/home/recent-submenu/${category.id}`, { state: { category } });
   };
 
   return (
@@ -34,7 +34,7 @@ export const AllMenuItems = () => {
         container
         spacing={4}
         justifyContent="center"
-        sx={{ marginTop: "30px" }}
+        sx={{ marginTop: "20px" }}
       >
         {categories.map((category, index) => (
           <Grid
@@ -53,7 +53,7 @@ export const AllMenuItems = () => {
               onClick={() => handleCardClick(category)}
               style={{
                 width: "180px",
-                height: "190px",
+                height: "160px",
                 borderRadius: "20px",
                 backgroundColor: "#1F1D2B",
                 textAlign: "center",
@@ -65,7 +65,7 @@ export const AllMenuItems = () => {
               <div
                 style={{
                   position: "absolute",
-                  top: "-50px",
+                  top: "-25px",
                   left: "50%",
                   transform: "translateX(-50%)",
                   width: "100px",
@@ -121,6 +121,7 @@ export const AllMenuItems = () => {
                     justifyContent: "center",
                     alignItems: "center",
                     height: "100%",
+                    marginTop:"50px"
                   }}
                 >
                   {category.title}

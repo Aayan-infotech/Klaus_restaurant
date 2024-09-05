@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -19,45 +19,28 @@ import {
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
 import { AddAllergens } from "./AddAllergens";
 
 export const AllergensManagement = () => {
-  const [allergens, setAllergens] = useState([]);
+  const [allergens, setAllergens] = useState([
+    { id: 1, name: "Peanuts", description: "Peanut allergy", status: true },
+    { id: 2, name: "Shellfish", description: "Shellfish allergy", status: false },
+    { id: 3, name: "Milk", description: "Dairy allergy", status: true },
+  ]);
+
   const [open, setOpen] = useState(false);
   const [selectedAllergen, setSelectedAllergen] = useState(null);
   const [openAddAllergensDialog, setOpenAddAllergensDialog] = useState(false);
   const [editingAllergen, setEditingAllergen] = useState(null);
 
-  useEffect(() => {
-    // Fetch allergens from API
-    const fetchAllergens = async () => {
-      try {
-        const response = await axios.get("/api/allergens");
-        setAllergens(response.data);
-      } catch (error) {
-        console.error("Error fetching allergens:", error);
-      }
-    };
-
-    fetchAllergens();
-  }, []);
-
-  const handleStatusChange = async (id) => {
-    try {
-      await axios.patch(`/api/allergens/${id}`, {
-        status: !allergens.find((allergen) => allergen.id === id).status,
-      });
-      setAllergens(
-        allergens.map((allergen) =>
-          allergen.id === id
-            ? { ...allergen, status: !allergen.status }
-            : allergen
-        )
-      );
-    } catch (error) {
-      console.error("Error updating allergen status:", error);
-    }
+  const handleStatusChange = (id) => {
+    setAllergens(
+      allergens.map((allergen) =>
+        allergen?.id === id
+          ? { ...allergen, status: !allergen?.status }
+          : allergen
+      )
+    );
   };
 
   const handleClickOpen = (allergen) => {
@@ -70,44 +53,30 @@ export const AllergensManagement = () => {
     setSelectedAllergen(null);
   };
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (selectedAllergen) {
-      try {
-        await axios.delete(`/api/allergens/${selectedAllergen.id}`);
-        setAllergens(
-          allergens.filter((allergen) => allergen.id !== selectedAllergen.id)
-        );
-        handleClose();
-      } catch (error) {
-        console.error("Error deleting allergen:", error);
-      }
+      setAllergens(allergens.filter((allergen) => allergen?.id !== selectedAllergen?.id));
+      handleClose();
     } else {
       console.error("No allergen selected for deletion.");
     }
   };
 
-  const handleAddAllergen = async (allergen) => {
-    try {
-      if (allergen.id) {
-        // Update allergen
-        await axios.put(`/api/allergens/${allergen.id}`, allergen);
-        setAllergens(
-          allergens.map((existingAllergen) =>
-            existingAllergen.id === allergen.id
-              ? { ...allergen }
-              : existingAllergen
-          )
-        );
-      } else {
-        // Add new allergen
-        const response = await axios.post("/api/allergens", allergen);
-        setAllergens([...allergens, response.data]);
-      }
-      setOpenAddAllergensDialog(false);
-      setEditingAllergen(null);
-    } catch (error) {
-      console.error("Error saving allergen:", error);
+  const handleAddAllergen = (allergen) => {
+    if (allergen.id) {
+      // Update existing allergen
+      setAllergens(
+        allergens.map((existingAllergen) =>
+          existingAllergen?.id === allergen?.id ? { ...allergen } : existingAllergen
+        )
+      );
+    } else {
+      // Add new allergen
+      const newId = Math.max(...allergens.map(a => a?.id)) + 1;
+      setAllergens([...allergens, { ...allergen, id: newId }]);
     }
+    setOpenAddAllergensDialog(false);
+    setEditingAllergen(null);
   };
 
   return (
@@ -152,10 +121,10 @@ export const AllergensManagement = () => {
             </TableRow>
           </TableHead>
           <TableBody sx={{ backgroundColor: "#272437" }}>
-            {allergens.map((allergen) => (
+            {allergens.map((allergen, index) => (
               <TableRow key={allergen.id}>
                 <TableCell align="center" sx={{ color: "white" }}>
-                  {allergen.id}
+                  {index + 1}
                 </TableCell>
                 <TableCell sx={{ color: "white" }}>{allergen.name}</TableCell>
                 <TableCell sx={{ color: "white" }}>
@@ -170,9 +139,9 @@ export const AllergensManagement = () => {
                         color: "#90BE6D",
                       },
                       "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track":
-                        {
-                          backgroundColor: "#90BE6D",
-                        },
+                      {
+                        backgroundColor: "#90BE6D",
+                      },
                     }}
                   />
                 </TableCell>
@@ -255,15 +224,13 @@ export const AllergensManagement = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            border: "1px solid #90BE6D",
+            borderRadius: "20px",
           },
         }}
       >
         <DialogContent
           sx={{
-            border: "1px solid #90BE6D",
-            borderRadius: "20px",
-            width: "250px",
-            height: "250px",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -271,11 +238,13 @@ export const AllergensManagement = () => {
           }}
         >
           <DialogTitle
+            variant="h4"
             sx={{
               color: "white",
               textAlign: "center",
               padding: "0",
               marginBottom: "8px",
+              fontWeight: "bold",
             }}
           >
             Delete?
@@ -336,12 +305,14 @@ export const AllergensManagement = () => {
           },
         }}
       >
-        <DialogTitle
-          sx={{ color: "white", textAlign: "center", marginBottom: "16px" }}
-        >
+        <DialogTitle sx={{ color: "white", textAlign: "center", fontWeight: "bold", marginBottom: "16px" }} >
           {editingAllergen ? "Edit Allergen" : "Add Allergen"}
         </DialogTitle>
-        <AddAllergens onSave={handleAddAllergen} allergen={editingAllergen} />
+        <AddAllergens
+          allergen={editingAllergen}
+          onSave={handleAddAllergen}
+          onCancel={() => setOpenAddAllergensDialog(false)}
+        />
       </Dialog>
     </Box>
   );

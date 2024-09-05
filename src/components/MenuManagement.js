@@ -11,28 +11,25 @@ import {
   Typography,
   Paper,
 } from "@mui/material";
-// import PersonIcon from "@mui/icons-material/Person";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 const managers = [
-  { id: 1, name: "Jhon Xyz", email: "Jhon@gmail.com", mobile: "987654466666" },
+  { id: 1, name: "Menu 1", email: "Jhon@gmail.com", mobile: "666666987654", description: "Neque porro quisquam", price: "11$", category: "Cat 1", allergens: "02", varients: "Medium", extras: "Veggies" },
   {
-    id: 2,
-    name: "Julia Thomas",
-    email: "Julia@gmail.com",
-    mobile: "666666987654",
+    id: 2, name: "Julia Thomas", email: "Julia@gmail.com", mobile: "666666987654", description: "Neque porro quisquam", price: "11$", category: "Cat 1", allergens: "02", varients: "Medium", extras: "Veggies",
   },
-  {
-    id: 3,
-    name: "Marry james",
-    email: "Marryjames@gmail.com",
-    mobile: "987654466666",
-  },
-  { id: 4, name: "Mark", email: "Mark@gmail.com", mobile: "666666987654" },
+  { id: 3, name: "Marry james", email: "Marryjames@gmail.com", mobile: "987654466666", description: "Neque porro quisquam", price: "11$", category: "Cat 1", allergens: "02", varients: "Medium", extras: "Veggies" },
+  { id: 4, name: "Mark", email: "Mark@gmail.com", mobile: "666666987654", description: "Neque porro quisquam", price: "11$", category: "Cat 1", allergens: "02", varients: "Medium", extras: "Veggies" },
 ];
 
 export const MenuManagement = () => {
+  const navigate = useNavigate();
+  const handleViewDetails = (manager) => {
+    navigate("/home/menu-details", { state: { manager } });
+  };
+
   return (
     <Box>
       <Typography variant="h6" fontWeight="bold" sx={{ color: "white" }}>
@@ -62,6 +59,7 @@ export const MenuManagement = () => {
                 <TableCell>
                   <Button
                     variant="outlined"
+                    onClick={() => handleViewDetails(manager)}
                     sx={{
                       minWidth: "auto",
                       width: "40px",

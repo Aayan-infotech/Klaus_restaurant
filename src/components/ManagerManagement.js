@@ -10,11 +10,6 @@ import {
   TableRow,
   Typography,
   Paper,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogContentText,
-  DialogActions,
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -24,6 +19,7 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { AddUser } from "../../src/components/AddUser";
+import { useNavigate } from "react-router-dom";
 
 export const ManagerManagement = () => {
   const [managers, setManagers] = useState([]);
@@ -32,9 +28,10 @@ export const ManagerManagement = () => {
   const [openAddUserDialog, setOpenAddUserDialog] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
 
+  const navigate = useNavigate();
+
   const handleClickOpen = (manager) => {
-    setSelectedManager(manager);
-    setOpen(true);
+    navigate('/home/manager-details', { state: { manager } });
   };
 
   const handleClose = () => {
@@ -42,16 +39,12 @@ export const ManagerManagement = () => {
     setSelectedManager(null);
   };
 
-  const handleDelete = () => {
-    if (selectedManager) {
-      setManagers((prevManagers) =>
-        prevManagers.filter((manager) => manager.id !== selectedManager.id)
-      );
-      handleClose();
-    } else {
-      console.error("No manager selected for deletion.");
-    }
+  const handleDelete = (manager_id) => {
+    setManagers((prevManagers) =>
+      prevManagers.filter((manager) => manager.id !== manager_id)
+    );
   };
+  
 
   const handleAddUser = (user) => {
     if (user) {
@@ -188,7 +181,7 @@ export const ManagerManagement = () => {
                   </Button>
                   <Button
                     variant="outlined"
-                    onClick={() => handleDelete(manager)}
+                    onClick={() => handleDelete(manager.id)}
                     sx={{
                       minWidth: "auto",
                       width: "40px",
@@ -217,50 +210,6 @@ export const ManagerManagement = () => {
           </TableBody>
         </Table>
       </TableContainer>
-
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        sx={{
-          "& .MuiPaper-root": {
-            backgroundColor: "#1f1d2b",
-            color: "white",
-            width: "400px",
-            padding: "20px",
-            border: "2px solid #90BE6D",
-            borderRadius: "10px",
-          },
-        }}
-      >
-        <DialogTitle sx={{ textAlign: "center", fontWeight: "bold" }}>
-          Manager Details
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText sx={{ color: "white" }}>
-            <strong>Name:</strong> {selectedManager?.name}
-          </DialogContentText>
-          <DialogContentText sx={{ color: "white" }}>
-            <strong>Email:</strong> {selectedManager?.email}
-          </DialogContentText>
-          <DialogContentText sx={{ color: "white" }}>
-            <strong>Mobile:</strong> {selectedManager?.mobile}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions sx={{ justifyContent: "center" }}>
-          <Button
-            onClick={handleClose}
-            sx={{
-              backgroundColor: "#90BE6D",
-              color: "white",
-              "&:hover": { backgroundColor: "#74a85e" },
-              borderRadius: "20px",
-              padding: "10px 20px",
-            }}
-          >
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
 
       {openAddUserDialog && (
         <AddUser

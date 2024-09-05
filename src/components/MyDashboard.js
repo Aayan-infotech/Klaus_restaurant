@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import saladImage from "../../src/assets/dashboard/image-removebg-preview-photoaidcom-cropped.png";
 import menu_1 from "../../src/assets/dashboard/menu1.png";
+import menu2 from "../../src/assets/menuitems/menu2.png";
 import { useNavigate } from "react-router-dom";
 
 const MyDashboard = () => {
@@ -23,7 +24,7 @@ const MyDashboard = () => {
   ];
 
   const handleSeeClick = () => {
-    navigate("/all-menu-items");
+    navigate("/home/recent-menu-list");
   };
 
   return (
@@ -53,31 +54,39 @@ const MyDashboard = () => {
       <Grid container spacing={4} sx={{ mt: 5 }}>
         <Grid item xs={4} container justifyContent="center" alignItems="center">
           <Card
-            sx={{
-              backgroundColor: "#567241",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: 2,
+            style={{
               maxWidth: 220,
               width: 220,
               height: 250,
+              borderRadius: "20px",
+              backgroundColor: "#567241",
+              textAlign: "center",
+              color: "white",
               position: "relative",
+              overflow: "visible"
             }}
           >
-            <Avatar
-              src={saladImage}
-              sx={{
-                width: 120,
-                height: 120,
+            <div
+              style={{
                 position: "absolute",
-                top: "-40px",
+                top: "-15px",
                 left: "15%",
                 transform: "translateX(-50%)",
+                width: "100px",
+                height: "100px",
               }}
-            />
-
+            >
+              <img
+                src={saladImage}
+                alt="menu2"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                }}
+              />
+            </div>
             <CardContent sx={{ mt: 6 }}>
               <Box
                 sx={{
@@ -86,6 +95,7 @@ const MyDashboard = () => {
                   alignItems: "center",
                   justifyContent: "center",
                   gap: 1,
+                  marginTop:"50px"
                 }}
               >
                 <Typography

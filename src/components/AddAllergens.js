@@ -48,20 +48,22 @@ export const AddAllergens = ({ onSave, allergen }) => {
           />
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-          <label htmlFor="email" style={{ flex: 1 }}>
-            Email
+          <label htmlFor="description" style={{ flex: 1 }}>
+            Description
           </label>
           <TextField
-            id="email"
-            type="email"
+            id="description"
+            type="text"
             variant="outlined"
             size="small"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+            multiline
+            minRows={3}
             sx={{
               flex: 2,
               "& .MuiOutlinedInput-root": {
-                borderRadius: "50px",
+                borderRadius: "10px",
                 backgroundColor: "white",
               },
             }}
