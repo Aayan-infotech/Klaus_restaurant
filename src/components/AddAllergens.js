@@ -12,6 +12,7 @@ export const AddAllergens = ({ onSave, allergen }) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState(true);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (allergen) {
@@ -25,6 +26,10 @@ export const AddAllergens = ({ onSave, allergen }) => {
     onSave({ id: allergen?.id, name, description, status });
   };
 
+  const handleClose = () => {
+    setOpen(false);
+  };
+  
   return (
     <DialogContent>
       <form style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
@@ -103,7 +108,7 @@ export const AddAllergens = ({ onSave, allergen }) => {
           Save
         </Button>
         <Button
-          onClick={() => setStatus(true)}
+          onClick={handleClose}
           sx={{
             backgroundColor: "#FF7CA3",
             color: "white",

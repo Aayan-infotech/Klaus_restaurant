@@ -10,6 +10,10 @@ export const Logout = ({ open, handleClose }) => {
         navigate('/');
       };    
 
+    const handleCloses = () => {
+        handleClose();
+    }
+
     return (
         <Dialog
             open={open}
@@ -37,13 +41,13 @@ export const Logout = ({ open, handleClose }) => {
                 }}
             >
                 <DialogTitle
-                variant='h4'
+                    variant='h4'
                     sx={{
                         color: "white",
                         textAlign: "center",
                         padding: "0",
                         marginBottom: "8px",
-                        fontWeight:"bold"
+                        fontWeight: "bold"
                     }}
                 >
                     Log Out
