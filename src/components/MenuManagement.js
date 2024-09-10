@@ -11,24 +11,63 @@ import {
   Typography,
   Paper,
 } from "@mui/material";
-// import PersonIcon from "@mui/icons-material/Person";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 
 const managers = [
-  { id: 1, name: "Menu 1", email: "Jhon@gmail.com", mobile: "666666987654", description: "Neque porro quisquam", price: "11$", category: "Cat 1", allergens: "02", varients: "Medium", extras: "Veggies" },
   {
-    id: 2, name: "Julia Thomas", email: "Julia@gmail.com", mobile: "666666987654", description: "Neque porro quisquam", price: "11$", category: "Cat 1", allergens: "02", varients: "Medium", extras: "Veggies",
+    id: 1,
+    name: "Menu 1",
+    email: "Jhon@gmail.com",
+    mobile: "666666987654",
+    description: "Neque porro quisquam",
+    price: "11$",
+    category: "Cat 1",
+    allergens: "02",
+    varients: "Medium",
+    extras: "Veggies",
   },
-  { id: 3, name: "Marry james", email: "Marryjames@gmail.com", mobile: "987654466666", description: "Neque porro quisquam", price: "11$", category: "Cat 1", allergens: "02", varients: "Medium", extras: "Veggies" },
-  { id: 4, name: "Mark", email: "Mark@gmail.com", mobile: "666666987654", description: "Neque porro quisquam", price: "11$", category: "Cat 1", allergens: "02", varients: "Medium", extras: "Veggies" },
+  {
+    id: 2,
+    name: "Julia Thomas",
+    email: "Julia@gmail.com",
+    mobile: "666666987654",
+    description: "Neque porro quisquam",
+    price: "11$",
+    category: "Cat 1",
+    allergens: "02",
+    varients: "Medium",
+    extras: "Veggies",
+  },
+  {
+    id: 3,
+    name: "Marry james",
+    email: "Marryjames@gmail.com",
+    mobile: "987654466666",
+    description: "Neque porro quisquam",
+    price: "11$",
+    category: "Cat 1",
+    allergens: "02",
+    varients: "Medium",
+    extras: "Veggies",
+  },
+  {
+    id: 4,
+    name: "Mark",
+    email: "Mark@gmail.com",
+    mobile: "666666987654",
+    description: "Neque porro quisquam",
+    price: "11$",
+    category: "Cat 1",
+    allergens: "02",
+    varients: "Medium",
+    extras: "Veggies",
+  },
 ];
 
 export const MenuManagement = () => {
   const navigate = useNavigate();
   const handleViewDetails = (manager) => {
-    navigate("/menu-details", { state: { manager } });
+    navigate("/home/all-categories", { state: { manager } });
   };
 
   return (
@@ -43,9 +82,11 @@ export const MenuManagement = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell align="start" sx={{ color: "white" }}>SI No</TableCell>
+              <TableCell align="start" sx={{ color: "white" }}>
+                SI No
+              </TableCell>
               <TableCell sx={{ color: "white" }}>Menu Name</TableCell>
-              <TableCell sx={{ color: "white" }}>Description</TableCell>
+              <TableCell sx={{ color: "white" }}>Abbreviation</TableCell>
               <TableCell sx={{ color: "white" }}>View</TableCell>
             </TableRow>
           </TableHead>
@@ -59,6 +100,13 @@ export const MenuManagement = () => {
                 <TableCell sx={{ color: "white" }}>{manager.email}</TableCell>
                 <TableCell>
                   <Button
+                    variant="outlined"
+                    onClick={() => handleViewDetails(manager)}
+                    sx={{ borderColor: "#96FF7C", color: "#96FF7C", textTransform:"none" }}
+                  >
+                    See
+                  </Button>
+                  {/* <Button
                     variant="outlined"
                     onClick={() => handleViewDetails(manager)}
                     sx={{
@@ -83,7 +131,7 @@ export const MenuManagement = () => {
                       icon={faEye}
                       style={{ color: "#96FF7C" }}
                     />
-                  </Button>
+                  </Button> */}
                 </TableCell>
               </TableRow>
             ))}

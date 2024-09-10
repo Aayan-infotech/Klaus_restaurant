@@ -10,12 +10,16 @@ import {
 
 export const AddUser = ({ onAddUser, userToEdit, onClose }) => {
   const [open, setOpen] = useState(true);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
 
   useEffect(() => {
     if (userToEdit) {
+      setUsername(userToEdit.username || "");
+      setPassword(userToEdit.password || "");
       setName(userToEdit.name);
       setEmail(userToEdit.email);
       setMobile(userToEdit.mobile);
@@ -23,7 +27,14 @@ export const AddUser = ({ onAddUser, userToEdit, onClose }) => {
   }, [userToEdit]);
 
   const handleAddOrUpdate = () => {
-    const user = { name, email, mobile, id: userToEdit ? userToEdit.id : null };
+    const user = {
+      username,
+      password,
+      name,
+      email,
+      mobile,
+      id: userToEdit ? userToEdit.id : null,
+    };
     onAddUser(user);
     handleClose();
   };
@@ -55,6 +66,45 @@ export const AddUser = ({ onAddUser, userToEdit, onClose }) => {
       </DialogTitle>
       <DialogContent>
         <form style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+            <label htmlFor="username" style={{ flex: 1 }}>
+              Username
+            </label>
+            <TextField
+              id="username"
+              variant="outlined"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              size="small"
+              sx={{
+                flex: 2,
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "50px",
+                  backgroundColor: "white",
+                },
+              }}
+            />
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+            <label htmlFor="password" style={{ flex: 1 }}>
+              Password
+            </label>
+            <TextField
+              id="password"
+              type="password"
+              variant="outlined"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              size="small"
+              sx={{
+                flex: 2,
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "50px",
+                  backgroundColor: "white",
+                },
+              }}
+            />
+          </div>
           <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
             <label htmlFor="name" style={{ flex: 1 }}>
               Name

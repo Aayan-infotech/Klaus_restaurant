@@ -17,26 +17,28 @@ import {
   faEye,
   faPenToSquare,
   faTrash,
+  faEyeSlash
 } from "@fortawesome/free-solid-svg-icons";
 import { AddUser } from "../../src/components/AddUser";
 import { useNavigate } from "react-router-dom";
 
 export const ManagerManagement = () => {
   const [managers, setManagers] = useState([]);
-  const [open, setOpen] = useState(false);
-  const [selectedManager, setSelectedManager] = useState(null);
   const [openAddUserDialog, setOpenAddUserDialog] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
+  const [passwordVisibility, setPasswordVisibility] = useState({});
 
   const navigate = useNavigate();
 
   const handleClickOpen = (manager) => {
-    navigate('/manager-details', { state: { manager } });
+    navigate("/home/manager-details", { state: { manager } });
   };
 
-  const handleClose = () => {
-    setOpen(false);
-    setSelectedManager(null);
+  const handleTogglePassword = (managerId) => {
+    setPasswordVisibility((prevState) => ({
+      ...prevState,
+      [managerId]: !prevState[managerId],
+    }));
   };
 
   const handleDelete = (manager_id) => {
@@ -44,7 +46,6 @@ export const ManagerManagement = () => {
       prevManagers.filter((manager) => manager.id !== manager_id)
     );
   };
-  
 
   const handleAddUser = (user) => {
     if (user) {
@@ -105,10 +106,13 @@ export const ManagerManagement = () => {
               <TableCell align="center" sx={{ color: "white" }}>
                 <PersonIcon />
               </TableCell>
+              <TableCell sx={{ color: "white" }}>Username</TableCell>
+              <TableCell sx={{ color: "white" }}>Password</TableCell>
               <TableCell sx={{ color: "white" }}>Name</TableCell>
               <TableCell sx={{ color: "white" }}>Email</TableCell>
               <TableCell sx={{ color: "white" }}>Mobile No</TableCell>
               <TableCell sx={{ color: "white" }}>Action</TableCell>
+              <TableCell sx={{ color: "white" }}></TableCell>
             </TableRow>
           </TableHead>
           <TableBody sx={{ backgroundColor: "#272437" }}>
@@ -117,6 +121,33 @@ export const ManagerManagement = () => {
                 <TableCell align="center" sx={{ color: "white" }}>
                   {manager.id}
                 </TableCell>
+                <TableCell sx={{ color: "white" }}>
+                  {manager.username}
+                </TableCell>
+                <TableCell sx={{ color: "white" }}>
+                  {passwordVisibility[manager.id]
+                    ? manager.password
+                    : "••••••••"}
+                  <Button
+                    onClick={() => handleTogglePassword(manager.id)}
+                    sx={{
+                      marginLeft: 1,
+                      minWidth: "auto",
+                      width: "40px",
+                      height: "40px",
+                      padding: 0,
+                      borderRadius: "10px",
+                      color: "#7CEFFF",
+                      "&:hover": {
+                        backgroundColor: "rgba(124, 239, 255, 0.1)",
+                      },
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      icon={passwordVisibility[manager.id] ? faEye : faEyeSlash}
+                    />
+                  </Button>
+                </TableCell>
                 <TableCell sx={{ color: "white" }}>{manager.name}</TableCell>
                 <TableCell sx={{ color: "white" }}>{manager.email}</TableCell>
                 <TableCell sx={{ color: "white" }}>{manager.mobile}</TableCell>
@@ -124,7 +155,6 @@ export const ManagerManagement = () => {
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center",
                   }}
                 >
                   <Button
@@ -203,6 +233,18 @@ export const ManagerManagement = () => {
                       icon={faTrash}
                       style={{ color: "#FF7CA3" }}
                     />
+                  </Button>
+                </TableCell>
+                <TableCell>
+                  <Button
+                    variant="outlined"
+                    sx={{
+                      borderColor: "#96FF7C",
+                      color: "#96FF7C",
+                      textTransform: "none",
+                    }}
+                  >
+                    Sent Email
                   </Button>
                 </TableCell>
               </TableRow>

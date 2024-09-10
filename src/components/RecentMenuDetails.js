@@ -4,8 +4,8 @@ import { useLocation } from 'react-router-dom';
 
 export const RecentMenuDetails = () => {
   const location = useLocation();
-  const recentList = location.state?.recentList;
-  console.log(recentList, 'recentList');
+  const recentList = location.state?.categoryDetails;
+  console.log(recentList, 'recentList')
 
   return (
     <Box>
@@ -18,7 +18,7 @@ export const RecentMenuDetails = () => {
             fontWeight="bold"
             sx={{ flexGrow: 1 }}
           >
-            Spicy instant noodle with special omelette
+            {recentList?.dish || recentList?.category}
           </Typography>
         </Grid>
         <Grid
@@ -30,7 +30,7 @@ export const RecentMenuDetails = () => {
           alignItems="center"
         >
           <img
-            src={recentList?.image || 'default-image-path'} 
+            src={recentList?.image || 'default-image-path'}
             alt={recentList?.title || 'Dish Image'}
             style={{
               width: "100px",
@@ -58,13 +58,13 @@ export const RecentMenuDetails = () => {
             </Grid>
             <Grid item xs={12} md={9}>
               <Box>
-                <Typography sx={{ color: "#90BE6D", fontWeight: "bold" }}>{recentList?.title || 'N/A'}</Typography>
+                <Typography sx={{ color: "#90BE6D", fontWeight: "bold" }}> {recentList?.dish || recentList?.category || 'N/A'}</Typography>
                 <Typography sx={{ marginTop: 2, color: "#90BE6D", fontWeight: "bold" }}>{recentList?.price || 'N/A'}</Typography>
                 <Typography sx={{ marginTop: 2, color: "#90BE6D", fontWeight: "bold" }}>{recentList?.category || 'N/A'}</Typography>
-                <Typography sx={{ marginTop: 2, color: "#90BE6D", fontWeight: "bold" }}>{recentList?.name || 'N/A'}</Typography>
+                <Typography sx={{ marginTop: 2, color: "#90BE6D", fontWeight: "bold" }}>{recentList?.menu_item || 'N/A'}</Typography>
                 <Typography sx={{ marginTop: 2, color: "#90BE6D", fontWeight: "bold" }}>{recentList?.allergens || 'N/A'}</Typography>
                 <Typography sx={{ marginTop: 2, color: "#90BE6D", fontWeight: "bold" }}>{recentList?.varients || 'N/A'}</Typography>
-                <Typography sx={{ marginTop: 2, color: "#90BE6D", fontWeight: "bold" }}>{recentList?.extras || 'N/A'}</Typography>
+                <Typography sx={{ marginTop: 2, color: "#90BE6D", fontWeight: "bold" }}>{recentList?.extra || 'N/A'}</Typography>
                 <Typography sx={{ marginTop: 2, color: "#90BE6D", fontWeight: "bold" }}>
                   {recentList?.description || 'N/A'}
                 </Typography>

@@ -10,7 +10,7 @@ export const ManagerDetails = () => {
     const managerdetails = location.state?.manager;
 
     const handleBack = () => {
-        navigate('/manager-management')
+        navigate('/home/manager-management')
     }
 
     return (

@@ -64,14 +64,12 @@ export const AllergensManagement = () => {
 
   const handleAddAllergen = (allergen) => {
     if (allergen.id) {
-      // Update existing allergen
       setAllergens(
         allergens.map((existingAllergen) =>
           existingAllergen?.id === allergen?.id ? { ...allergen } : existingAllergen
         )
       );
     } else {
-      // Add new allergen
       const newId = Math.max(...allergens.map(a => a?.id)) + 1;
       setAllergens([...allergens, { ...allergen, id: newId }]);
     }
@@ -115,7 +113,7 @@ export const AllergensManagement = () => {
                 SI No
               </TableCell>
               <TableCell sx={{ color: "white" }}>Allergen Name</TableCell>
-              <TableCell sx={{ color: "white" }}>Description</TableCell>
+              <TableCell sx={{ color: "white" }}>Abbreviation</TableCell>
               <TableCell sx={{ color: "white" }}>Status</TableCell>
               <TableCell sx={{ color: "white" }}>Action</TableCell>
             </TableRow>
@@ -130,7 +128,7 @@ export const AllergensManagement = () => {
                 <TableCell sx={{ color: "white" }}>
                   {allergen.description}
                 </TableCell>
-                <TableCell align="center" sx={{ color: "white" }}>
+                <TableCell sx={{ color: "white" }}>
                   <Switch
                     checked={allergen.status}
                     onChange={() => handleStatusChange(allergen.id)}
@@ -149,7 +147,6 @@ export const AllergensManagement = () => {
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center",
                   }}
                 >
                   <Button

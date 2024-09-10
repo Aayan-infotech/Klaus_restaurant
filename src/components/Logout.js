@@ -1,5 +1,4 @@
-// src/components/Logout.js
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
 
@@ -7,12 +6,13 @@ export const Logout = ({ open, handleClose }) => {
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        navigate('/');
-    };
-
-    const handleCloses = () => {
         handleClose();
-    }
+        navigate('/');
+      };    
+
+    // const handleCloses = () => {
+    //     handleClose();
+    // }
 
     return (
         <Dialog
@@ -80,7 +80,7 @@ export const Logout = ({ open, handleClose }) => {
                         Yes
                     </Button>
                     <Button
-                        onClick={handleCloses}
+                        onClick={handleClose}
                         sx={{
                             backgroundColor: "#90BE6D",
                             color: "white",

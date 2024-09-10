@@ -24,7 +24,7 @@ const MyDashboard = () => {
   ];
 
   const handleSeeClick = () => {
-    navigate("/recent-menu-list");
+    navigate("/home/recent-menu-list");
   };
 
   return (
