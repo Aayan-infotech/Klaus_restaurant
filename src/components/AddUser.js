@@ -15,6 +15,8 @@ export const AddUser = ({ onAddUser, userToEdit, onClose }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
+  const [gender, setGender] = useState("");
+  const [notes, setNotes] = useState("");
 
   useEffect(() => {
     if (userToEdit) {
@@ -33,6 +35,8 @@ export const AddUser = ({ onAddUser, userToEdit, onClose }) => {
       name,
       email,
       mobile,
+      gender,
+      notes,
       id: userToEdit ? userToEdit.id : null,
     };
     onAddUser(user);
@@ -155,6 +159,44 @@ export const AddUser = ({ onAddUser, userToEdit, onClose }) => {
               size="small"
               value={mobile}
               onChange={(e) => setMobile(e.target.value)}
+              sx={{
+                flex: 2,
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "50px",
+                  backgroundColor: "white",
+                },
+              }}
+            />
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+            <label htmlFor="mobile" style={{ flex: 1 }}>
+              Gender
+            </label>
+            <TextField
+              id="gender"
+              variant="outlined"
+              size="small"
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
+              sx={{
+                flex: 2,
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "50px",
+                  backgroundColor: "white",
+                },
+              }}
+            />
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+            <label htmlFor="mobile" style={{ flex: 1 }}>
+              Notes
+            </label>
+            <TextField
+              id="notes"
+              variant="outlined"
+              size="small"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
               sx={{
                 flex: 2,
                 "& .MuiOutlinedInput-root": {

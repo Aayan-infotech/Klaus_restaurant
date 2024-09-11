@@ -18,7 +18,6 @@ const menuItems = [
 export const MenuManagementDetails = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const managerDetails = location.state?.manager;
 
     const scrollRef = useRef(null);
 

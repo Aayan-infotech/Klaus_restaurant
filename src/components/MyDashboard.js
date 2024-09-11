@@ -11,7 +11,6 @@ import {
 } from "@mui/material";
 import saladImage from "../../src/assets/dashboard/image-removebg-preview-photoaidcom-cropped.png";
 import menu_1 from "../../src/assets/dashboard/menu1.png";
-import menu2 from "../../src/assets/menuitems/menu2.png";
 import { useNavigate } from "react-router-dom";
 
 const MyDashboard = () => {

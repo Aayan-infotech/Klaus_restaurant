@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -12,62 +12,29 @@ import {
   Paper,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
-const managers = [
-  {
-    id: 1,
-    name: "Menu 1",
-    email: "Jhon@gmail.com",
-    mobile: "666666987654",
-    description: "Neque porro quisquam",
-    price: "11$",
-    category: "Cat 1",
-    allergens: "02",
-    varients: "Medium",
-    extras: "Veggies",
-  },
-  {
-    id: 2,
-    name: "Julia Thomas",
-    email: "Julia@gmail.com",
-    mobile: "666666987654",
-    description: "Neque porro quisquam",
-    price: "11$",
-    category: "Cat 1",
-    allergens: "02",
-    varients: "Medium",
-    extras: "Veggies",
-  },
-  {
-    id: 3,
-    name: "Marry james",
-    email: "Marryjames@gmail.com",
-    mobile: "987654466666",
-    description: "Neque porro quisquam",
-    price: "11$",
-    category: "Cat 1",
-    allergens: "02",
-    varients: "Medium",
-    extras: "Veggies",
-  },
-  {
-    id: 4,
-    name: "Mark",
-    email: "Mark@gmail.com",
-    mobile: "666666987654",
-    description: "Neque porro quisquam",
-    price: "11$",
-    category: "Cat 1",
-    allergens: "02",
-    varients: "Medium",
-    extras: "Veggies",
-  },
-];
+import axios from "axios";
 
 export const MenuManagement = () => {
+  const [allMenus, setAllMenus] = useState([]);
   const navigate = useNavigate();
   const handleViewDetails = (manager) => {
     navigate("/home/all-categories", { state: { manager } });
+  };
+
+  useEffect(() => {
+    fetchAllMenus();
+  }, []);
+
+  const fetchAllMenus = async () => {
+    try {
+      const response = await axios.get(
+        "https://viamenu.oa.r.appspot.com/viamenu/clients/client001/menus/all"
+      );
+      console.log(response.data, "response");
+      setAllMenus(response?.data);
+    } catch (error) {
+      console.log(error, "Something went wrong");
+    }
   };
 
   return (
@@ -88,50 +55,32 @@ export const MenuManagement = () => {
               <TableCell sx={{ color: "white" }}>Menu Name</TableCell>
               <TableCell sx={{ color: "white" }}>Abbreviation</TableCell>
               <TableCell sx={{ color: "white" }}>View</TableCell>
+              <TableCell sx={{ color: "white" }}>Created At</TableCell>
+              <TableCell sx={{ color: "white" }}>Created By</TableCell>
             </TableRow>
           </TableHead>
           <TableBody sx={{ backgroundColor: "#272437" }}>
-            {managers.map((manager) => (
-              <TableRow key={manager.id}>
+            {allMenus?.map((menu, index) => (
+              <TableRow key={index}>
                 <TableCell align="start" sx={{ color: "white" }}>
-                  {manager.id}
+                  {menu?.menuId}
                 </TableCell>
-                <TableCell sx={{ color: "white" }}>{manager.name}</TableCell>
-                <TableCell sx={{ color: "white" }}>{manager.email}</TableCell>
+                <TableCell sx={{ color: "white" }}>{menu?.menuName || 'N/A'}</TableCell>
+                <TableCell sx={{ color: "white" }}>{menu?.comment || 'N/A'}</TableCell>
+                <TableCell sx={{ color: "white" }}>{menu?.createdAt || 'N/A'}</TableCell>
+                <TableCell sx={{ color: "white" }}>{menu?.createdBy || 'N/A'}</TableCell>
                 <TableCell>
                   <Button
                     variant="outlined"
-                    onClick={() => handleViewDetails(manager)}
-                    sx={{ borderColor: "#96FF7C", color: "#96FF7C", textTransform:"none" }}
+                    onClick={() => handleViewDetails(menu)}
+                    sx={{
+                      borderColor: "#96FF7C",
+                      color: "#96FF7C",
+                      textTransform: "none",
+                    }}
                   >
                     See
                   </Button>
-                  {/* <Button
-                    variant="outlined"
-                    onClick={() => handleViewDetails(manager)}
-                    sx={{
-                      minWidth: "auto",
-                      width: "40px",
-                      height: "40px",
-                      padding: 0,
-                      borderRadius: "10px",
-                      marginRight: 1,
-                      borderColor: "#96FF7C",
-                      color: "#96FF7C",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      "&:hover": {
-                        borderColor: "#96FF7C",
-                        backgroundColor: "rgba(150, 255, 124, 0.1)",
-                      },
-                    }}
-                  >
-                    <FontAwesomeIcon
-                      icon={faEye}
-                      style={{ color: "#96FF7C" }}
-                    />
-                  </Button> */}
                 </TableCell>
               </TableRow>
             ))}

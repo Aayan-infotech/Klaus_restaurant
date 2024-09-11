@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -20,13 +20,10 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { AddAllergens } from "./AddAllergens";
+import axios from "axios";
 
 export const AllergensManagement = () => {
-  const [allergens, setAllergens] = useState([
-    { id: 1, name: "Peanuts", description: "Peanut allergy", status: true },
-    { id: 2, name: "Shellfish", description: "Shellfish allergy", status: false },
-    { id: 3, name: "Milk", description: "Dairy allergy", status: true },
-  ]);
+  const [allergens, setAllergens] = useState([]);
 
   const [open, setOpen] = useState(false);
   const [selectedAllergen, setSelectedAllergen] = useState(null);
@@ -55,7 +52,9 @@ export const AllergensManagement = () => {
 
   const handleDelete = () => {
     if (selectedAllergen) {
-      setAllergens(allergens.filter((allergen) => allergen?.id !== selectedAllergen?.id));
+      setAllergens(
+        allergens.filter((allergen) => allergen?.id !== selectedAllergen?.id)
+      );
       handleClose();
     } else {
       console.error("No allergen selected for deletion.");
@@ -66,15 +65,33 @@ export const AllergensManagement = () => {
     if (allergen.id) {
       setAllergens(
         allergens.map((existingAllergen) =>
-          existingAllergen?.id === allergen?.id ? { ...allergen } : existingAllergen
+          existingAllergen?.id === allergen?.id
+            ? { ...allergen }
+            : existingAllergen
         )
       );
     } else {
-      const newId = Math.max(...allergens.map(a => a?.id)) + 1;
+      const newId = Math.max(...allergens.map((a) => a?.id)) + 1;
       setAllergens([...allergens, { ...allergen, id: newId }]);
     }
     setOpenAddAllergensDialog(false);
     setEditingAllergen(null);
+  };
+
+  useEffect(() => {
+    fetchAllAllergens();
+  }, []);
+
+  const fetchAllAllergens = async () => {
+    try {
+      const response = await axios.get(
+        "https://viamenu.oa.r.appspot.com/viamenu/clients/client001/allergens/all"
+      );
+      console.log(response.data, "response");
+      setAllergens(response?.data);
+    } catch (error) {
+      console.log(error, "Something went wrong");
+    }
   };
 
   return (
@@ -120,26 +137,28 @@ export const AllergensManagement = () => {
           </TableHead>
           <TableBody sx={{ backgroundColor: "#272437" }}>
             {allergens.map((allergen, index) => (
-              <TableRow key={allergen.id}>
+              <TableRow key={index}>
                 <TableCell align="center" sx={{ color: "white" }}>
-                  {index + 1}
+                  {allergen?.allergenId || index + 1}
                 </TableCell>
-                <TableCell sx={{ color: "white" }}>{allergen.name}</TableCell>
                 <TableCell sx={{ color: "white" }}>
-                  {allergen.description}
+                  {allergen?.allergenName || "N/A"}
+                </TableCell>
+                <TableCell sx={{ color: "white" }}>
+                  {allergen?.abbreviation || "N/A"}
                 </TableCell>
                 <TableCell sx={{ color: "white" }}>
                   <Switch
                     checked={allergen.status}
-                    onChange={() => handleStatusChange(allergen.id)}
+                    onChange={() => handleStatusChange(allergen?.allergenId)}
                     sx={{
                       "& .MuiSwitch-switchBase.Mui-checked": {
                         color: "#90BE6D",
                       },
                       "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track":
-                      {
-                        backgroundColor: "#90BE6D",
-                      },
+                        {
+                          backgroundColor: "#90BE6D",
+                        },
                     }}
                   />
                 </TableCell>
@@ -302,7 +321,14 @@ export const AllergensManagement = () => {
           },
         }}
       >
-        <DialogTitle sx={{ color: "white", textAlign: "center", fontWeight: "bold", marginBottom: "16px" }} >
+        <DialogTitle
+          sx={{
+            color: "white",
+            textAlign: "center",
+            fontWeight: "bold",
+            marginBottom: "16px",
+          }}
+        >
           {editingAllergen ? "Edit Allergen" : "Add Allergen"}
         </DialogTitle>
         <AddAllergens

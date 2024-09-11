@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -17,13 +17,15 @@ import {
   faEye,
   faPenToSquare,
   faTrash,
-  faEyeSlash
+  faEyeSlash,
 } from "@fortawesome/free-solid-svg-icons";
 import { AddUser } from "../../src/components/AddUser";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export const ManagerManagement = () => {
   const [managers, setManagers] = useState([]);
+  const [allManagers, setAllManagers] = useState([]);
   const [openAddUserDialog, setOpenAddUserDialog] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const [passwordVisibility, setPasswordVisibility] = useState({});
@@ -35,6 +37,7 @@ export const ManagerManagement = () => {
   };
 
   const handleTogglePassword = (managerId) => {
+    console.log(managerId, 'managerId');
     setPasswordVisibility((prevState) => ({
       ...prevState,
       [managerId]: !prevState[managerId],
@@ -69,6 +72,22 @@ export const ManagerManagement = () => {
   const handleEdit = (manager) => {
     setEditingUser(manager);
     setOpenAddUserDialog(true);
+  };
+
+  useEffect(() => {
+    fetchAllManagers();
+  }, []);
+
+  const fetchAllManagers = async () => {
+    try {
+      const response = await axios.get(
+        "https://viamenu.oa.r.appspot.com/viamenu/clients/client001/managers/all"
+      );
+      console.log(response.data, "response");
+      setAllManagers(response?.data);
+    } catch (error) {
+      console.log(error, "Something went wrong");
+    }
   };
 
   return (
@@ -116,20 +135,20 @@ export const ManagerManagement = () => {
             </TableRow>
           </TableHead>
           <TableBody sx={{ backgroundColor: "#272437" }}>
-            {managers.map((manager) => (
-              <TableRow key={manager.id}>
+            {allManagers.map((manager, index) => (
+              <TableRow key={index}>
                 <TableCell align="center" sx={{ color: "white" }}>
-                  {manager.id}
+                  {manager.managerId}
                 </TableCell>
                 <TableCell sx={{ color: "white" }}>
-                  {manager.username}
+                  {manager.login}
                 </TableCell>
                 <TableCell sx={{ color: "white" }}>
-                  {passwordVisibility[manager.id]
+                  {passwordVisibility[manager.managerId]
                     ? manager.password
                     : "••••••••"}
                   <Button
-                    onClick={() => handleTogglePassword(manager.id)}
+                    onClick={() => handleTogglePassword(manager.managerId)}
                     sx={{
                       marginLeft: 1,
                       minWidth: "auto",
@@ -144,13 +163,13 @@ export const ManagerManagement = () => {
                     }}
                   >
                     <FontAwesomeIcon
-                      icon={passwordVisibility[manager.id] ? faEye : faEyeSlash}
+                      icon={passwordVisibility[manager.managerId] ? faEye : faEyeSlash}
                     />
                   </Button>
                 </TableCell>
                 <TableCell sx={{ color: "white" }}>{manager.name}</TableCell>
                 <TableCell sx={{ color: "white" }}>{manager.email}</TableCell>
-                <TableCell sx={{ color: "white" }}>{manager.mobile}</TableCell>
+                <TableCell sx={{ color: "white" }}>{manager.phone}</TableCell>
                 <TableCell
                   sx={{
                     display: "flex",

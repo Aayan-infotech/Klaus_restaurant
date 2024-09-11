@@ -3,10 +3,9 @@ import { Grid, Card, Typography, Box, CardContent, Item } from "@mui/material";
 import "../../src/styles/dashboard.css";
 import menu1 from "../../src/assets/menuitems/menu.jpeg";
 import menu2 from "../../src/assets/menuitems/menu2.png";
-import menu_1 from "../../src/assets/dashboard/menu1.png";
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const allcategoriesMenu = [
     {
