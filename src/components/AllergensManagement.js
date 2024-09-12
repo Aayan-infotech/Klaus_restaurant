@@ -119,115 +119,121 @@ export const AllergensManagement = () => {
           Add Allergens
         </Button>
       </Box>
-      <TableContainer
-        component={Paper}
-        sx={{ marginTop: "20px", backgroundColor: "#1f1d2b" }}
-      >
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell align="center" sx={{ color: "white" }}>
-                SI No
-              </TableCell>
-              <TableCell sx={{ color: "white" }}>Allergen Name</TableCell>
-              <TableCell sx={{ color: "white" }}>Abbreviation</TableCell>
-              <TableCell sx={{ color: "white" }}>Status</TableCell>
-              <TableCell sx={{ color: "white" }}>Action</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody sx={{ backgroundColor: "#272437" }}>
-            {allergens.map((allergen, index) => (
-              <TableRow key={index}>
+      <Box sx={{
+        overflowY: 'auto',
+        maxHeight: '450px',
+        scrollbarWidth: 'none',
+      }}>
+        <TableContainer
+          component={Paper}
+          sx={{ marginTop: "20px", backgroundColor: "#1f1d2b" }}
+        >
+          <Table>
+            <TableHead>
+              <TableRow>
                 <TableCell align="center" sx={{ color: "white" }}>
-                  {allergen?.allergenId || index + 1}
+                  SI No
                 </TableCell>
-                <TableCell sx={{ color: "white" }}>
-                  {allergen?.allergenName || "N/A"}
-                </TableCell>
-                <TableCell sx={{ color: "white" }}>
-                  {allergen?.abbreviation || "N/A"}
-                </TableCell>
-                <TableCell sx={{ color: "white" }}>
-                  <Switch
-                    checked={allergen.status}
-                    onChange={() => handleStatusChange(allergen?.allergenId)}
-                    sx={{
-                      "& .MuiSwitch-switchBase.Mui-checked": {
-                        color: "#90BE6D",
-                      },
-                      "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track":
+                <TableCell sx={{ color: "white" }}>Allergen Name</TableCell>
+                <TableCell sx={{ color: "white" }}>Abbreviation</TableCell>
+                <TableCell sx={{ color: "white" }}>Status</TableCell>
+                <TableCell sx={{ color: "white" }}>Action</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody sx={{ backgroundColor: "#272437" }}>
+              {allergens.map((allergen, index) => (
+                <TableRow key={index}>
+                  <TableCell align="center" sx={{ color: "white" }}>
+                    {allergen?.allergenId || index + 1}
+                  </TableCell>
+                  <TableCell sx={{ color: "white" }}>
+                    {allergen?.allergenName || "N/A"}
+                  </TableCell>
+                  <TableCell sx={{ color: "white" }}>
+                    {allergen?.abbreviation || "N/A"}
+                  </TableCell>
+                  <TableCell sx={{ color: "white" }}>
+                    <Switch
+                      checked={allergen.status}
+                      onChange={() => handleStatusChange(allergen?.allergenId)}
+                      sx={{
+                        "& .MuiSwitch-switchBase.Mui-checked": {
+                          color: "#90BE6D",
+                        },
+                        "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track":
                         {
                           backgroundColor: "#90BE6D",
                         },
-                    }}
-                  />
-                </TableCell>
-                <TableCell
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <Button
-                    variant="outlined"
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell
                     sx={{
-                      minWidth: "auto",
-                      width: "40px",
-                      height: "40px",
-                      padding: 0,
-                      borderRadius: "10px",
-                      marginRight: 1,
-                      borderColor: "#7CEFFF",
-                      color: "#7CEFFF",
                       display: "flex",
                       alignItems: "center",
-                      justifyContent: "center",
-                      "&:hover": {
+                    }}
+                  >
+                    <Button
+                      variant="outlined"
+                      sx={{
+                        minWidth: "auto",
+                        width: "40px",
+                        height: "40px",
+                        padding: 0,
+                        borderRadius: "10px",
+                        marginRight: 1,
                         borderColor: "#7CEFFF",
-                        backgroundColor: "rgba(150, 255, 124, 0.1)",
-                      },
-                    }}
-                    onClick={() => {
-                      setEditingAllergen(allergen);
-                      setOpenAddAllergensDialog(true);
-                    }}
-                  >
-                    <FontAwesomeIcon
-                      icon={faPenToSquare}
-                      style={{ color: "#7CEFFF" }}
-                    />
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    onClick={() => handleClickOpen(allergen)}
-                    sx={{
-                      minWidth: "auto",
-                      width: "40px",
-                      height: "40px",
-                      padding: 0,
-                      borderRadius: "10px",
-                      borderColor: "#FF7CA3",
-                      color: "#FF7CA3",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      "&:hover": {
+                        color: "#7CEFFF",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        "&:hover": {
+                          borderColor: "#7CEFFF",
+                          backgroundColor: "rgba(150, 255, 124, 0.1)",
+                        },
+                      }}
+                      onClick={() => {
+                        setEditingAllergen(allergen);
+                        setOpenAddAllergensDialog(true);
+                      }}
+                    >
+                      <FontAwesomeIcon
+                        icon={faPenToSquare}
+                        style={{ color: "#7CEFFF" }}
+                      />
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      onClick={() => handleClickOpen(allergen)}
+                      sx={{
+                        minWidth: "auto",
+                        width: "40px",
+                        height: "40px",
+                        padding: 0,
+                        borderRadius: "10px",
                         borderColor: "#FF7CA3",
-                        backgroundColor: "rgba(150, 255, 124, 0.1)",
-                      },
-                    }}
-                  >
-                    <FontAwesomeIcon
-                      icon={faTrash}
-                      style={{ color: "#FF7CA3" }}
-                    />
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+                        color: "#FF7CA3",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        "&:hover": {
+                          borderColor: "#FF7CA3",
+                          backgroundColor: "rgba(150, 255, 124, 0.1)",
+                        },
+                      }}
+                    >
+                      <FontAwesomeIcon
+                        icon={faTrash}
+                        style={{ color: "#FF7CA3" }}
+                      />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
       <Dialog
         onClose={handleClose}
         open={open}

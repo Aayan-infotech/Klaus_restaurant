@@ -1,11 +1,12 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Grid, Card, Typography, Box, CardContent, Item } from "@mui/material";
 import "../../src/styles/dashboard.css";
 import menu1 from "../../src/assets/menuitems/menu.jpeg";
 import menu2 from "../../src/assets/menuitems/menu2.png";
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 
 const allcategoriesMenu = [
     {
@@ -96,8 +97,12 @@ const allcategoriesMenu = [
 ];
 
 export const AllMenuCategories = () => {
-    const navigate = useNavigate();
+    const [allCategories, setAllCategories] = useState([]);
+    const [menuImages, setMenuImages] = useState([]);
+    const { id } = useParams();
+    const menuId = id;
 
+    const navigate = useNavigate();
     const scrollRef = useRef(null);
 
     const scrollLeft = () => {
@@ -119,8 +124,35 @@ export const AllMenuCategories = () => {
     };
 
     const handleCardClick = (category_types) => {
-        console.log(category_types, 'category_types')
         navigate('/home/sub-category', { state: { category_types } });
+    };
+
+    useEffect(() => {
+        fetchMenuCategory();
+        fetchAllMenusImages();
+    }, []);
+
+    const fetchMenuCategory = async () => {
+        try {
+            const response = await axios.get(
+                `https://viamenu.oa.r.appspot.com/viamenu/clients/client001/menus/${menuId}/categories/all`
+            );
+            setAllCategories(response?.data);
+        } catch (error) {
+            console.log(error, "Something went wrong");
+        }
+    }
+
+    const fetchAllMenusImages = async () => {
+        try {
+            const response = await axios.get(
+                `https://viamenu.oa.r.appspot.com/viamenu/clients/client001/menus/${menuId}/images/all`
+            );
+            const images = response.data;
+            setMenuImages(images);
+        } catch (error) {
+            console.log(error, "Something went wrong");
+        }
     };
 
     return (
@@ -167,7 +199,7 @@ export const AllMenuCategories = () => {
                 }}
             >
                 <Grid container spacing={2}>
-                    {allcategoriesMenu.map((item, index) => (
+                    {allCategories?.map((item, index) => (
                         <Grid
                             item
                             xs={12}
@@ -226,7 +258,7 @@ export const AllMenuCategories = () => {
                                             fontSize: { xs: '14px', sm: '16px', md: '17px' },
                                         }}
                                     >
-                                        {item.category}
+                                        {item?.categoryName}
                                     </Typography>
                                 </CardContent>
                             </Card>
