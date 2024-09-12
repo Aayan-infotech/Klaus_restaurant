@@ -30,16 +30,6 @@ export const AllergensManagement = () => {
   const [openAddAllergensDialog, setOpenAddAllergensDialog] = useState(false);
   const [editingAllergen, setEditingAllergen] = useState(null);
 
-  const handleStatusChange = (id) => {
-    setAllergens(
-      allergens.map((allergen) =>
-        allergen?.id === id
-          ? { ...allergen, status: !allergen?.status }
-          : allergen
-      )
-    );
-  };
-
   const handleClickOpen = (allergen) => {
     setSelectedAllergen(allergen);
     setOpen(true);
@@ -50,30 +40,7 @@ export const AllergensManagement = () => {
     setSelectedAllergen(null);
   };
 
-  const handleDelete = () => {
-    if (selectedAllergen) {
-      setAllergens(
-        allergens.filter((allergen) => allergen?.id !== selectedAllergen?.id)
-      );
-      handleClose();
-    } else {
-      console.error("No allergen selected for deletion.");
-    }
-  };
-
   const handleAddAllergen = (allergen) => {
-    if (allergen.id) {
-      setAllergens(
-        allergens.map((existingAllergen) =>
-          existingAllergen?.id === allergen?.id
-            ? { ...allergen }
-            : existingAllergen
-        )
-      );
-    } else {
-      const newId = Math.max(...allergens.map((a) => a?.id)) + 1;
-      setAllergens([...allergens, { ...allergen, id: newId }]);
-    }
     setOpenAddAllergensDialog(false);
     setEditingAllergen(null);
   };
@@ -119,11 +86,13 @@ export const AllergensManagement = () => {
           Add Allergens
         </Button>
       </Box>
-      <Box sx={{
-        overflowY: 'auto',
-        maxHeight: '450px',
-        scrollbarWidth: 'none',
-      }}>
+      <Box
+        sx={{
+          overflowY: "auto",
+          maxHeight: "450px",
+          scrollbarWidth: "none",
+        }}
+      >
         <TableContainer
           component={Paper}
           sx={{ marginTop: "20px", backgroundColor: "#1f1d2b" }}
@@ -150,20 +119,22 @@ export const AllergensManagement = () => {
                     {allergen?.allergenName || "N/A"}
                   </TableCell>
                   <TableCell sx={{ color: "white" }}>
-                    {allergen?.abbreviation || "N/A"}
+                    {allergen?.abbreviation
+                      ? allergen.abbreviation.length > 10
+                        ? `${allergen.abbreviation.slice(0, 10)}...`
+                        : allergen.abbreviation
+                      : "N/A"}
                   </TableCell>
                   <TableCell sx={{ color: "white" }}>
                     <Switch
-                      checked={allergen.status}
-                      onChange={() => handleStatusChange(allergen?.allergenId)}
                       sx={{
                         "& .MuiSwitch-switchBase.Mui-checked": {
                           color: "#90BE6D",
                         },
                         "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track":
-                        {
-                          backgroundColor: "#90BE6D",
-                        },
+                          {
+                            backgroundColor: "#90BE6D",
+                          },
                       }}
                     />
                   </TableCell>
@@ -288,7 +259,6 @@ export const AllergensManagement = () => {
             }}
           >
             <Button
-              onClick={handleDelete}
               sx={{
                 backgroundColor: "#FF7CA3",
                 color: "white",
@@ -341,6 +311,7 @@ export const AllergensManagement = () => {
           allergen={editingAllergen}
           onSave={handleAddAllergen}
           onCancel={() => setOpenAddAllergensDialog(false)}
+          onClose={() => setOpenAddAllergensDialog(false)}
         />
       </Dialog>
     </Box>

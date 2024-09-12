@@ -1,46 +1,63 @@
 import React, { useState, useEffect } from "react";
-import {
-  DialogContent,
-  TextField,
-  Button,
-  Box,
-  Switch,
-} from "@mui/material";
+import { DialogContent, TextField, Button, Box, Switch } from "@mui/material";
+import axios from "axios";
 
-export const AddAllergens = ({ onSave, allergen }) => {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+export const AddAllergens = ({ onSave, allergen, onClose }) => {
+  const [allergenName, setAllergenName] = useState("");
+  const [abbreviation, setAbbreviation] = useState("");
   const [status, setStatus] = useState(true);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (allergen) {
-      setName(allergen.name);
-      setDescription(allergen.description);
-      setStatus(allergen.status);
+      setAllergenName(allergen?.allergenName || "");
+      setAbbreviation(allergen?.abbreviation || "");
     }
   }, [allergen]);
 
-  const handleSave = () => {
-    onSave({ id: allergen?.id, name, description, status });
+  const handleSave = async (e) => {
+    e.preventDefault();
+    const payload = {
+      allergenName,
+      abbreviation,
+    };
+    try {
+      let response;
+      if (allergen) {
+        response = await axios.put(
+          `https://viamenu.oa.r.appspot.com/viamenu/clients/client001/allergens/${allergen?.allergenId}`,
+          payload
+        );
+      } else {
+        response = await axios.post(
+          "https://viamenu.oa.r.appspot.com/viamenu/clients/client001/allergens/",
+          payload
+        );
+      }
+      onSave(response.data);
+      handleClose();
+    } catch (error) {
+      console.error("Error saving allergen", error);
+    }
   };
 
   const handleClose = () => {
     setOpen(false);
+    onClose();
   };
-  
+
   return (
     <DialogContent>
       <form style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-          <label htmlFor="name" style={{ flex: 1 }}>
-            Name
+          <label htmlFor="allergenName" style={{ flex: 1 }}>
+            Allergen Name
           </label>
           <TextField
-            id="name"
+            id="allergenName"
             variant="outlined"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={allergenName}
+            onChange={(e) => setAllergenName(e.target.value)}
             size="small"
             sx={{
               flex: 2,
@@ -52,16 +69,16 @@ export const AddAllergens = ({ onSave, allergen }) => {
           />
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-          <label htmlFor="description" style={{ flex: 1 }}>
-            Description
+          <label htmlFor="abbreviation" style={{ flex: 1 }}>
+            Abbreviation
           </label>
           <TextField
-            id="description"
+            id="abbreviation"
             type="text"
             variant="outlined"
             size="small"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            value={abbreviation}
+            onChange={(e) => setAbbreviation(e.target.value)}
             multiline
             minRows={3}
             sx={{

@@ -51,20 +51,20 @@ export const ManagerManagement = () => {
   };
 
   const handleAddUser = (user) => {
-    if (user) {
-      if (user.id) {
-        setManagers((prevManagers) =>
-          prevManagers.map((manager) =>
-            manager.id === user.id ? { ...user } : manager
-          )
-        );
-      } else {
-        setManagers((prevManagers) => [
-          ...prevManagers,
-          { ...user, id: prevManagers.length + 1 },
-        ]);
-      }
-    }
+    // if (user) {
+    //   if (user.id) {
+    //     setManagers((prevManagers) =>
+    //       prevManagers.map((manager) =>
+    //         manager.id === user.id ? { ...user } : manager
+    //       )
+    //     );
+    //   } else {
+    //     setManagers((prevManagers) => [
+    //       ...prevManagers,
+    //       { ...user, id: prevManagers.length + 1 },
+    //     ]);
+    //   }
+    // }
     setOpenAddUserDialog(false);
     setEditingUser(null);
   };
@@ -138,17 +138,17 @@ export const ManagerManagement = () => {
             {allManagers.map((manager, index) => (
               <TableRow key={index}>
                 <TableCell align="center" sx={{ color: "white" }}>
-                  {manager.managerId}
+                  {manager?.managerId}
                 </TableCell>
                 <TableCell sx={{ color: "white" }}>
-                  {manager.login}
+                  {manager?.login}
                 </TableCell>
                 <TableCell sx={{ color: "white" }}>
-                  {passwordVisibility[manager.managerId]
-                    ? manager.password
+                  {passwordVisibility[manager?.managerId]
+                    ? manager?.password
                     : "••••••••"}
                   <Button
-                    onClick={() => handleTogglePassword(manager.managerId)}
+                    onClick={() => handleTogglePassword(manager?.managerId)}
                     sx={{
                       marginLeft: 1,
                       minWidth: "auto",
@@ -163,13 +163,13 @@ export const ManagerManagement = () => {
                     }}
                   >
                     <FontAwesomeIcon
-                      icon={passwordVisibility[manager.managerId] ? faEye : faEyeSlash}
+                      icon={passwordVisibility[manager?.managerId] ? faEye : faEyeSlash}
                     />
                   </Button>
                 </TableCell>
-                <TableCell sx={{ color: "white" }}>{manager.name}</TableCell>
-                <TableCell sx={{ color: "white" }}>{manager.email}</TableCell>
-                <TableCell sx={{ color: "white" }}>{manager.phone}</TableCell>
+                <TableCell sx={{ color: "white" }}>{manager?.firstName}</TableCell>
+                <TableCell sx={{ color: "white" }}>{manager?.email}</TableCell>
+                <TableCell sx={{ color: "white" }}>{manager?.phone}</TableCell>
                 <TableCell
                   sx={{
                     display: "flex",
@@ -230,7 +230,7 @@ export const ManagerManagement = () => {
                   </Button>
                   <Button
                     variant="outlined"
-                    onClick={() => handleDelete(manager.id)}
+                    onClick={() => handleDelete(manager?.managerId)}
                     sx={{
                       minWidth: "auto",
                       width: "40px",

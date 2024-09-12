@@ -7,6 +7,7 @@ import {
   DialogTitle,
   TextField,
 } from "@mui/material";
+import axios from "axios";
 
 export const AddUser = ({ onAddUser, userToEdit, onClose }) => {
   const [open, setOpen] = useState(true);
@@ -19,30 +20,49 @@ export const AddUser = ({ onAddUser, userToEdit, onClose }) => {
   const [notes, setNotes] = useState("");
 
   useEffect(() => {
+    console.log(userToEdit);
     if (userToEdit) {
-      setUsername(userToEdit.username || "");
+      setUsername(userToEdit.login || "");
       setPassword(userToEdit.password || "");
-      setName(userToEdit.name);
-      setEmail(userToEdit.email);
-      setMobile(userToEdit.mobile);
+      setName(userToEdit.firstName || "");
+      setEmail(userToEdit.email || "");
+      setMobile(userToEdit.phone || "");
+      setGender(userToEdit.gender || "");
+      setNotes(userToEdit.notes || "");
     }
   }, [userToEdit]);
 
-  const handleAddOrUpdate = () => {
-    const user = {
-      username,
+  const handleAddOrUpdate = async (e) => {
+    e.preventDefault();
+    const payload = {
+      login: username,
       password,
-      name,
+      firstName: name,
       email,
-      mobile,
+      phone: mobile,
       gender,
       notes,
-      id: userToEdit ? userToEdit.id : null,
     };
-    onAddUser(user);
-    handleClose();
+    try {
+      let response;
+      if (userToEdit) {
+        response = await axios.put(
+          `https://viamenu.oa.r.appspot.com/viamenu/clients/client001/managers/${userToEdit?.managerId}`,
+          payload
+        );
+      } else {
+        response = await axios.post(
+          "https://viamenu.oa.r.appspot.com/viamenu/clients/client001/managers/",
+          payload
+        );
+      }
+      onAddUser(response.data);
+      handleClose();
+    } catch (error) {
+      console.error("Error saving allergen", error);
+    }
   };
-
+  
   const handleClose = () => {
     setOpen(false);
     onClose();
