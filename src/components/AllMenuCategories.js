@@ -20,7 +20,7 @@ export const AllMenuCategories = () => {
 
   useEffect(() => {
     fetchMenuCategory();
-    fetchAllMenusImages();
+    // fetchAllMenusImages();
   }, []);
 
   const fetchMenuCategory = async () => {
@@ -29,6 +29,7 @@ export const AllMenuCategories = () => {
         `https://viamenu.oa.r.appspot.com/viamenu/clients/client001/menus/${menuId}/categories/all`
       );
       setAllCategories(response?.data);
+      console.log(response?.data, 'all categories')
     } catch (error) {
       console.log(error, "Something went wrong");
     } finally {
@@ -36,19 +37,19 @@ export const AllMenuCategories = () => {
     }
   };
 
-  const fetchAllMenusImages = async () => {
-    try {
-      const response = await axios.get(
-        `https://viamenu.oa.r.appspot.com/viamenu/clients/client001/menus/${menuId}/images/all`
-      );
-      const images = response.data;
-      setMenuImages(images);
-    } catch (error) {
-      console.log(error, "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const fetchAllMenusImages = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       `https://viamenu.oa.r.appspot.com/viamenu/clients/client001/menus/${menuId}/images/all`
+  //     );
+  //     const images = response.data;
+  //     setMenuImages(images);
+  //   } catch (error) {
+  //     console.log(error, "Something went wrong");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <Box>

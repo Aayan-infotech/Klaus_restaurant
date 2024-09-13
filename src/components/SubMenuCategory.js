@@ -1,10 +1,12 @@
-import React, { useEffect } from "react";
-import { Typography, Box } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Typography, Box, Grid, Card, CardContent } from "@mui/material";
 import "../../src/styles/dashboard.css";
 import { useNavigate, useParams } from "react-router-dom";
+import menu2 from "../../src/assets/menuitems/menu2.png";
 import axios from "axios";
 
 export const SubMenuCategory = () => {
+  const [allSubCategories, setAllSubCategories] = useState([]);
   const navigate = useNavigate();
 
   const { menuId, categoryId } = useParams();
@@ -12,7 +14,7 @@ export const SubMenuCategory = () => {
 
   useEffect(() => {
     fetchCategoryItem();
-  }, [fetchCategoryItem]);
+  }, []);
 
   const fetchCategoryItem = async () => {
     try {
@@ -20,6 +22,7 @@ export const SubMenuCategory = () => {
         `https://viamenu.oa.r.appspot.com/viamenu/clients/client001/menus/${menuId}/categories/${categoryId}/items/all`
       );
       console.log(response?.data);
+      setAllSubCategories(response?.data);
     } catch (error) {
       console.log(error, "something went wrong");
     }
@@ -51,9 +54,8 @@ export const SubMenuCategory = () => {
           scrollbarWidth: "none",
         }}
       >
-        ljbkjk
-        {/* <Grid container spacing={2}>
-          {allsubcategories.map((item, index) => (
+        <Grid container spacing={2}>
+          {allSubCategories.map((item, index) => (
             <Grid
               item
               xs={12}
@@ -91,8 +93,8 @@ export const SubMenuCategory = () => {
                   }}
                 >
                   <img
-                    src={item.image}
-                    alt={item.title}
+                    src={item?.image || menu2}
+                    alt={item?.title}
                     style={{
                       width: "100%",
                       height: "100%",
@@ -113,16 +115,17 @@ export const SubMenuCategory = () => {
                   <Typography
                     style={{
                       marginTop: "60px",
+                      wordWrap: "break-word",
                       fontSize: { xs: "14px", sm: "16px", md: "17px" },
                     }}
                   >
-                    {item.cat_name}
+                    {/* {item?.mainItemText} */}The document editor that you can takeThe document editor that you can take
                   </Typography>
                 </CardContent>
               </Card>
             </Grid>
           ))}
-        </Grid> */}
+        </Grid>
       </Box>
     </Box>
   );

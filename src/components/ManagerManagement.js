@@ -267,7 +267,7 @@ export const ManagerManagement = () => {
                         textTransform: "none",
                       }}
                     >
-                      Sent Email
+                      Send Email
                     </Button>
                   </TableCell>
                 </TableRow>
