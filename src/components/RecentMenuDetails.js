@@ -1,6 +1,7 @@
 import React from 'react';
 import { Grid, Typography, Box } from "@mui/material";
 import { useLocation } from 'react-router-dom';
+import menu2 from "../../src/assets/menuitems/menu2.png";
 
 export const RecentMenuDetails = () => {
   const location = useLocation();
@@ -18,7 +19,7 @@ export const RecentMenuDetails = () => {
             fontWeight="bold"
             sx={{ flexGrow: 1 }}
           >
-            {recentList?.dish || recentList?.category}
+            {recentList?.mainItemText || recentList?.category}
           </Typography>
         </Grid>
         <Grid
@@ -30,7 +31,7 @@ export const RecentMenuDetails = () => {
           alignItems="center"
         >
           <img
-            src={recentList?.image || 'default-image-path'}
+            src={recentList?.image || menu2}
             alt={recentList?.title || 'Dish Image'}
             style={{
               width: "100px",
@@ -54,19 +55,23 @@ export const RecentMenuDetails = () => {
                 <Typography sx={{ marginTop: 2, fontWeight: "bold" }}>Varients</Typography>
                 <Typography sx={{ marginTop: 2, fontWeight: "bold" }}>Extras</Typography>
                 <Typography sx={{ marginTop: 2, fontWeight: "bold" }}>Description</Typography>
+                <Typography sx={{ marginTop: 2, fontWeight: "bold" }}>Add Item Text</Typography>
               </Box>
             </Grid>
             <Grid item xs={12} md={9}>
               <Box>
-                <Typography sx={{ color: "#90BE6D", fontWeight: "bold" }}> {recentList?.dish || recentList?.category || 'N/A'}</Typography>
-                <Typography sx={{ marginTop: 2, color: "#90BE6D", fontWeight: "bold" }}>{recentList?.price || 'N/A'}</Typography>
+                <Typography sx={{ color: "#90BE6D", fontWeight: "bold" }}> {recentList?.mainItemText || recentList?.category || 'N/A'}</Typography>
+                <Typography sx={{ marginTop: 2, color: "#90BE6D", fontWeight: "bold" }}>$ {recentList?.price || 'N/A'}</Typography>
                 <Typography sx={{ marginTop: 2, color: "#90BE6D", fontWeight: "bold" }}>{recentList?.category || 'N/A'}</Typography>
                 <Typography sx={{ marginTop: 2, color: "#90BE6D", fontWeight: "bold" }}>{recentList?.menu_item || 'N/A'}</Typography>
                 <Typography sx={{ marginTop: 2, color: "#90BE6D", fontWeight: "bold" }}>{recentList?.allergens || 'N/A'}</Typography>
-                <Typography sx={{ marginTop: 2, color: "#90BE6D", fontWeight: "bold" }}>{recentList?.varients || 'N/A'}</Typography>
+                <Typography sx={{ marginTop: 2, color: "#90BE6D", fontWeight: "bold" }}>{recentList?.variantSetId || 'N/A'}</Typography>
                 <Typography sx={{ marginTop: 2, color: "#90BE6D", fontWeight: "bold" }}>{recentList?.extra || 'N/A'}</Typography>
                 <Typography sx={{ marginTop: 2, color: "#90BE6D", fontWeight: "bold" }}>
-                  {recentList?.description || 'N/A'}
+                  {recentList?.itemDescription || 'N/A'}
+                </Typography>
+                <Typography sx={{ marginTop: 2, color: "#90BE6D", fontWeight: "bold" }}>
+                  {recentList?.addItemText || 'N/A'}
                 </Typography>
               </Box>
             </Grid>

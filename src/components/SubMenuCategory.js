@@ -119,7 +119,7 @@ export const SubMenuCategory = () => {
                       fontSize: { xs: "14px", sm: "16px", md: "17px" },
                     }}
                   >
-                    {/* {item?.mainItemText} */}The document editor that you can takeThe document editor that you can take
+                    {item?.mainItemText}
                   </Typography>
                 </CardContent>
               </Card>
