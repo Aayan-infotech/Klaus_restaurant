@@ -6,6 +6,7 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
+  CircularProgress
 } from "@mui/material";
 import axios from "axios";
 
@@ -18,6 +19,7 @@ export const AddUser = ({ onAddUser, userToEdit, onClose }) => {
   const [mobile, setMobile] = useState("");
   const [gender, setGender] = useState("");
   const [notes, setNotes] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     console.log(userToEdit);
@@ -43,6 +45,7 @@ export const AddUser = ({ onAddUser, userToEdit, onClose }) => {
       gender,
       notes,
     };
+    setLoading(true);
     try {
       let response;
       if (userToEdit) {
@@ -60,9 +63,11 @@ export const AddUser = ({ onAddUser, userToEdit, onClose }) => {
       handleClose();
     } catch (error) {
       console.error("Error saving allergen", error);
+    } finally {
+      setLoading(false);
     }
   };
-  
+
   const handleClose = () => {
     setOpen(false);
     onClose();
@@ -236,6 +241,7 @@ export const AddUser = ({ onAddUser, userToEdit, onClose }) => {
       >
         <Button
           onClick={handleAddOrUpdate}
+          disabled={loading}
           sx={{
             backgroundColor: "#FF7CA3",
             color: "white",
@@ -244,7 +250,14 @@ export const AddUser = ({ onAddUser, userToEdit, onClose }) => {
             padding: "10px 20px",
           }}
         >
-          {userToEdit ? "Update User" : "Add User"}
+          {loading ? (
+            <>
+              <CircularProgress size={20} color="inherit" sx={{ marginRight: 1 }} />
+              {userToEdit ? "Updating..." : "Saving..."}
+            </>
+          ) : (
+            userToEdit ? "Update User" : "Add User"
+          )}
         </Button>
         <Button
           onClick={handleClose}

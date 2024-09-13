@@ -9,7 +9,7 @@ import {
   TableHead,
   TableRow,
   Typography,
-  Paper,
+  Paper, CircularProgress
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -29,6 +29,7 @@ export const ManagerManagement = () => {
   const [openAddUserDialog, setOpenAddUserDialog] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const [passwordVisibility, setPasswordVisibility] = useState({});
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
 
@@ -51,21 +52,8 @@ export const ManagerManagement = () => {
   };
 
   const handleAddUser = (user) => {
-    // if (user) {
-    //   if (user.id) {
-    //     setManagers((prevManagers) =>
-    //       prevManagers.map((manager) =>
-    //         manager.id === user.id ? { ...user } : manager
-    //       )
-    //     );
-    //   } else {
-    //     setManagers((prevManagers) => [
-    //       ...prevManagers,
-    //       { ...user, id: prevManagers.length + 1 },
-    //     ]);
-    //   }
-    // }
     setOpenAddUserDialog(false);
+    fetchAllManagers();
     setEditingUser(null);
   };
 
@@ -83,10 +71,11 @@ export const ManagerManagement = () => {
       const response = await axios.get(
         "https://viamenu.oa.r.appspot.com/viamenu/clients/client001/managers/all"
       );
-      console.log(response.data, "response");
       setAllManagers(response?.data);
     } catch (error) {
       console.log(error, "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -115,163 +104,178 @@ export const ManagerManagement = () => {
           Add User
         </Button>
       </Box>
-      <TableContainer
-        component={Paper}
-        sx={{ marginTop: "20px", backgroundColor: "#1f1d2b" }}
-      >
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell align="center" sx={{ color: "white" }}>
-                <PersonIcon />
-              </TableCell>
-              <TableCell sx={{ color: "white" }}>Username</TableCell>
-              <TableCell sx={{ color: "white" }}>Password</TableCell>
-              <TableCell sx={{ color: "white" }}>Name</TableCell>
-              <TableCell sx={{ color: "white" }}>Email</TableCell>
-              <TableCell sx={{ color: "white" }}>Mobile No</TableCell>
-              <TableCell sx={{ color: "white" }}>Action</TableCell>
-              <TableCell sx={{ color: "white" }}></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody sx={{ backgroundColor: "#272437" }}>
-            {allManagers.map((manager, index) => (
-              <TableRow key={index}>
+      {loading ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "300px",
+          }}
+        >
+          <CircularProgress sx={{ color: "#96FF7C" }} />
+          <Typography variant="h6" sx={{ color: "white", marginLeft: 2 }}>
+            Loading...
+          </Typography>
+        </Box>
+      ) : (
+        <TableContainer
+          component={Paper}
+          sx={{ marginTop: "20px", backgroundColor: "#1f1d2b" }}
+        >
+          <Table>
+            <TableHead>
+              <TableRow>
                 <TableCell align="center" sx={{ color: "white" }}>
-                  {manager?.managerId}
+                  <PersonIcon />
                 </TableCell>
-                <TableCell sx={{ color: "white" }}>
-                  {manager?.login}
-                </TableCell>
-                <TableCell sx={{ color: "white" }}>
-                  {passwordVisibility[manager?.managerId]
-                    ? manager?.password
-                    : "••••••••"}
-                  <Button
-                    onClick={() => handleTogglePassword(manager?.managerId)}
-                    sx={{
-                      marginLeft: 1,
-                      minWidth: "auto",
-                      width: "40px",
-                      height: "40px",
-                      padding: 0,
-                      borderRadius: "10px",
-                      color: "#7CEFFF",
-                      "&:hover": {
-                        backgroundColor: "rgba(124, 239, 255, 0.1)",
-                      },
-                    }}
-                  >
-                    <FontAwesomeIcon
-                      icon={passwordVisibility[manager?.managerId] ? faEye : faEyeSlash}
-                    />
-                  </Button>
-                </TableCell>
-                <TableCell sx={{ color: "white" }}>{manager?.firstName}</TableCell>
-                <TableCell sx={{ color: "white" }}>{manager?.email}</TableCell>
-                <TableCell sx={{ color: "white" }}>{manager?.phone}</TableCell>
-                <TableCell
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <Button
-                    variant="outlined"
-                    onClick={() => handleClickOpen(manager)}
-                    sx={{
-                      minWidth: "auto",
-                      width: "40px",
-                      height: "40px",
-                      padding: 0,
-                      borderRadius: "10px",
-                      marginRight: 1,
-                      borderColor: "#96FF7C",
-                      color: "#96FF7C",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      "&:hover": {
-                        borderColor: "#96FF7C",
-                        backgroundColor: "rgba(150, 255, 124, 0.1)",
-                      },
-                    }}
-                  >
-                    <FontAwesomeIcon
-                      icon={faEye}
-                      style={{ color: "#96FF7C" }}
-                    />
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    onClick={() => handleEdit(manager)}
-                    sx={{
-                      minWidth: "auto",
-                      width: "40px",
-                      height: "40px",
-                      padding: 0,
-                      borderRadius: "10px",
-                      marginRight: 1,
-                      borderColor: "#7CEFFF",
-                      color: "#7CEFFF",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      "&:hover": {
-                        borderColor: "#7CEFFF",
-                        backgroundColor: "rgba(150, 255, 124, 0.1)",
-                      },
-                    }}
-                  >
-                    <FontAwesomeIcon
-                      icon={faPenToSquare}
-                      style={{ color: "#7CEFFF" }}
-                    />
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    onClick={() => handleDelete(manager?.managerId)}
-                    sx={{
-                      minWidth: "auto",
-                      width: "40px",
-                      height: "40px",
-                      padding: 0,
-                      borderRadius: "10px",
-                      borderColor: "#FF7CA3",
-                      color: "#FF7CA3",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      "&:hover": {
-                        borderColor: "#FF7CA3",
-                        backgroundColor: "rgba(150, 255, 124, 0.1)",
-                      },
-                    }}
-                  >
-                    <FontAwesomeIcon
-                      icon={faTrash}
-                      style={{ color: "#FF7CA3" }}
-                    />
-                  </Button>
-                </TableCell>
-                <TableCell>
-                  <Button
-                    variant="outlined"
-                    sx={{
-                      borderColor: "#96FF7C",
-                      color: "#96FF7C",
-                      textTransform: "none",
-                    }}
-                  >
-                    Sent Email
-                  </Button>
-                </TableCell>
+                <TableCell sx={{ color: "white" }}>Username</TableCell>
+                <TableCell sx={{ color: "white" }}>Password</TableCell>
+                <TableCell sx={{ color: "white" }}>Name</TableCell>
+                <TableCell sx={{ color: "white" }}>Email</TableCell>
+                <TableCell sx={{ color: "white" }}>Mobile No</TableCell>
+                <TableCell sx={{ color: "white" }}>Action</TableCell>
+                <TableCell sx={{ color: "white" }}></TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-
+            </TableHead>
+            <TableBody sx={{ backgroundColor: "#272437" }}>
+              {allManagers.map((manager, index) => (
+                <TableRow key={index}>
+                  <TableCell align="center" sx={{ color: "white" }}>
+                    {manager?.managerId}
+                  </TableCell>
+                  <TableCell sx={{ color: "white" }}>
+                    {manager?.login}
+                  </TableCell>
+                  <TableCell sx={{ color: "white" }}>
+                    {passwordVisibility[manager?.managerId]
+                      ? manager?.password
+                      : "••••••••"}
+                    <Button
+                      onClick={() => handleTogglePassword(manager?.managerId)}
+                      sx={{
+                        marginLeft: 1,
+                        minWidth: "auto",
+                        width: "40px",
+                        height: "40px",
+                        padding: 0,
+                        borderRadius: "10px",
+                        color: "#7CEFFF",
+                        "&:hover": {
+                          backgroundColor: "rgba(124, 239, 255, 0.1)",
+                        },
+                      }}
+                    >
+                      <FontAwesomeIcon
+                        icon={passwordVisibility[manager?.managerId] ? faEye : faEyeSlash}
+                      />
+                    </Button>
+                  </TableCell>
+                  <TableCell sx={{ color: "white" }}>{manager?.firstName}</TableCell>
+                  <TableCell sx={{ color: "white" }}>{manager?.email}</TableCell>
+                  <TableCell sx={{ color: "white" }}>{manager?.phone}</TableCell>
+                  <TableCell
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Button
+                      variant="outlined"
+                      onClick={() => handleClickOpen(manager)}
+                      sx={{
+                        minWidth: "auto",
+                        width: "40px",
+                        height: "40px",
+                        padding: 0,
+                        borderRadius: "10px",
+                        marginRight: 1,
+                        borderColor: "#96FF7C",
+                        color: "#96FF7C",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        "&:hover": {
+                          borderColor: "#96FF7C",
+                          backgroundColor: "rgba(150, 255, 124, 0.1)",
+                        },
+                      }}
+                    >
+                      <FontAwesomeIcon
+                        icon={faEye}
+                        style={{ color: "#96FF7C" }}
+                      />
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      onClick={() => handleEdit(manager)}
+                      sx={{
+                        minWidth: "auto",
+                        width: "40px",
+                        height: "40px",
+                        padding: 0,
+                        borderRadius: "10px",
+                        marginRight: 1,
+                        borderColor: "#7CEFFF",
+                        color: "#7CEFFF",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        "&:hover": {
+                          borderColor: "#7CEFFF",
+                          backgroundColor: "rgba(150, 255, 124, 0.1)",
+                        },
+                      }}
+                    >
+                      <FontAwesomeIcon
+                        icon={faPenToSquare}
+                        style={{ color: "#7CEFFF" }}
+                      />
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      onClick={() => handleDelete(manager?.managerId)}
+                      sx={{
+                        minWidth: "auto",
+                        width: "40px",
+                        height: "40px",
+                        padding: 0,
+                        borderRadius: "10px",
+                        borderColor: "#FF7CA3",
+                        color: "#FF7CA3",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        "&:hover": {
+                          borderColor: "#FF7CA3",
+                          backgroundColor: "rgba(150, 255, 124, 0.1)",
+                        },
+                      }}
+                    >
+                      <FontAwesomeIcon
+                        icon={faTrash}
+                        style={{ color: "#FF7CA3" }}
+                      />
+                    </Button>
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      variant="outlined"
+                      sx={{
+                        borderColor: "#96FF7C",
+                        color: "#96FF7C",
+                        textTransform: "none",
+                      }}
+                    >
+                      Sent Email
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
       {openAddUserDialog && (
         <AddUser
           onAddUser={handleAddUser}

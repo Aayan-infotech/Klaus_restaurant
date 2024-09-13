@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { DialogContent, TextField, Button, Box, Switch } from "@mui/material";
+import { DialogContent, TextField, Button, Box, Switch, CircularProgress } from "@mui/material";
 import axios from "axios";
+// import LoadingButton from '@mui/lab/LoadingButton'; 
 
 export const AddAllergens = ({ onSave, allergen, onClose }) => {
   const [allergenName, setAllergenName] = useState("");
   const [abbreviation, setAbbreviation] = useState("");
   const [status, setStatus] = useState(true);
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (allergen) {
@@ -17,10 +19,12 @@ export const AddAllergens = ({ onSave, allergen, onClose }) => {
 
   const handleSave = async (e) => {
     e.preventDefault();
+
     const payload = {
       allergenName,
       abbreviation,
     };
+    setLoading(true);
     try {
       let response;
       if (allergen) {
@@ -38,6 +42,8 @@ export const AddAllergens = ({ onSave, allergen, onClose }) => {
       handleClose();
     } catch (error) {
       console.error("Error saving allergen", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -115,13 +121,21 @@ export const AddAllergens = ({ onSave, allergen, onClose }) => {
       <Box sx={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}>
         <Button
           onClick={handleSave}
+          disabled={loading}
           sx={{
             backgroundColor: "#90BE6D",
             color: "white",
             "&:hover": { backgroundColor: "#74a85e" },
           }}
         >
-          Save
+          {loading ? (
+            <>
+              <CircularProgress size={20} color="inherit" sx={{ marginRight: 1 }} />
+              {allergen ? "Updating..." : "Saving..."}
+            </>
+          ) : (
+            allergen ? "Update" : "Save"
+          )}
         </Button>
         <Button
           onClick={handleClose}

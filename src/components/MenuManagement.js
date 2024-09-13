@@ -9,13 +9,14 @@ import {
   TableHead,
   TableRow,
   Typography,
-  Paper,
+  Paper, CircularProgress
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export const MenuManagement = () => {
   const [allMenus, setAllMenus] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   // const handleViewDetails = (menu_id) => {
@@ -38,6 +39,8 @@ export const MenuManagement = () => {
       setAllMenus(response?.data);
     } catch (error) {
       console.log(error, "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -51,51 +54,68 @@ export const MenuManagement = () => {
         maxHeight: '450px',
         scrollbarWidth: 'none',
       }}>
-        <TableContainer
-          component={Paper}
-          sx={{ marginTop: "20px", backgroundColor: "#1f1d2b" }}
-        >
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell sx={{ textAlign:"start", color: "white" }}>
-                  SI No
-                </TableCell>
-                <TableCell sx={{ color: "white" }}>Menu Name</TableCell>
-                <TableCell sx={{ color: "white" }}>Abbreviation</TableCell>
-                <TableCell sx={{ color: "white" }}>View</TableCell>
-                <TableCell sx={{ color: "white" }}>Created At</TableCell>
-                <TableCell sx={{ color: "white" }}>Created By</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody sx={{ backgroundColor: "#272437" }}>
-              {allMenus?.map((menu, index) => (
-                <TableRow key={index}>
-                  <TableCell sx={{ textAlign:"start", color: "white" }}>
-                    {menu?.menuId}
+        {loading ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+              minHeight: "300px",
+            }}
+          >
+            <CircularProgress sx={{ color: "#96FF7C" }} />
+            <Typography variant="h6" sx={{ color: "white", marginLeft: 2 }}>
+              Loading...
+            </Typography>
+          </Box>
+        ) : (
+          <TableContainer
+            component={Paper}
+            sx={{ marginTop: "20px", backgroundColor: "#1f1d2b" }}
+          >
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={{ textAlign: "start", color: "white" }}>
+                    SI No
                   </TableCell>
-                  <TableCell sx={{ color: "white" }}>{menu?.menuName || 'N/A'}</TableCell>
-                  <TableCell sx={{ color: "white" }}>{menu?.comment || 'N/A'}</TableCell>
-                  <TableCell sx={{ color: "white" }}>{menu?.createdAt || 'N/A'}</TableCell>
-                  <TableCell sx={{ color: "white" }}>{menu?.createdBy || 'N/A'}</TableCell>
-                  <TableCell>
-                    <Button
-                      variant="outlined"
-                      onClick={() => handleViewDetails(menu?.menuId)}
-                      sx={{
-                        borderColor: "#96FF7C",
-                        color: "#96FF7C",
-                        textTransform: "none",
-                      }}
-                    >
-                      See
-                    </Button>
-                  </TableCell>
+                  <TableCell sx={{ color: "white" }}>Menu Name</TableCell>
+                  <TableCell sx={{ color: "white" }}>Abbreviation</TableCell>
+                  <TableCell sx={{ color: "white" }}>View</TableCell>
+                  <TableCell sx={{ color: "white" }}>Created At</TableCell>
+                  <TableCell sx={{ color: "white" }}>Created By</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody sx={{ backgroundColor: "#272437" }}>
+                {allMenus?.map((menu, index) => (
+                  <TableRow key={index}>
+                    <TableCell sx={{ textAlign: "start", color: "white" }}>
+                      {menu?.menuId}
+                    </TableCell>
+                    <TableCell sx={{ color: "white" }}>{menu?.menuName || 'N/A'}</TableCell>
+                    <TableCell sx={{ color: "white" }}>{menu?.comment || 'N/A'}</TableCell>
+                    <TableCell sx={{ color: "white" }}>{menu?.createdAt || 'N/A'}</TableCell>
+                    <TableCell sx={{ color: "white" }}>{menu?.createdBy || 'N/A'}</TableCell>
+                    <TableCell>
+                      <Button
+                        variant="outlined"
+                        onClick={() => handleViewDetails(menu?.menuId)}
+                        sx={{
+                          borderColor: "#96FF7C",
+                          color: "#96FF7C",
+                          textTransform: "none",
+                        }}
+                      >
+                        See
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
       </Box>
     </Box>
   );

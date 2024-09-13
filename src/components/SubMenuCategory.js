@@ -1,21 +1,18 @@
-import React, { useEffect, useRef } from "react";
-import { Grid, Card, Typography, Box, CardContent } from "@mui/material";
+import React, { useEffect } from "react";
+import { Typography, Box } from "@mui/material";
 import "../../src/styles/dashboard.css";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 export const SubMenuCategory = () => {
-  const location = useLocation();
   const navigate = useNavigate();
-  const allsubcat = location.state?.category_types;
-  const allsubcategories = allsubcat?.subCategories;
 
   const { menuId, categoryId } = useParams();
   console.log(menuId, categoryId);
 
   useEffect(() => {
     fetchCategoryItem();
-  }, []);
+  }, [fetchCategoryItem]);
 
   const fetchCategoryItem = async () => {
     try {
