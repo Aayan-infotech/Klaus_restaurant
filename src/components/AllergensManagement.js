@@ -30,6 +30,7 @@ export const AllergensManagement = () => {
   const [openAddAllergensDialog, setOpenAddAllergensDialog] = useState(false);
   const [editingAllergen, setEditingAllergen] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleClickOpen = (allergen) => {
     setSelectedAllergen(allergen);
@@ -56,8 +57,13 @@ export const AllergensManagement = () => {
       const response = await axios.get(
         "https://viamenu.oa.r.appspot.com/viamenu/clients/client001/allergens/all"
       );
-      setAllergens(response?.data);
+      if (response?.data?.data?.length > 0) {
+        setAllergens(response?.data?.data);
+      } else {
+        setErrorMessage(response?.data?.message || 'No managers available');
+      }
     } catch (error) {
+      setErrorMessage(error, "Failed to load menus.");
       console.log(error, "Something went wrong");
     } finally {
       setLoading(false);
@@ -114,6 +120,20 @@ export const AllergensManagement = () => {
               Loading...
             </Typography>
           </Box>
+        ) : errorMessage ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+              minHeight: "300px",
+            }}
+          >
+            <Typography variant="h6" sx={{ color: "white" }}>
+              {errorMessage}
+            </Typography>
+          </Box>
         ) : (
           <TableContainer
             component={Paper}
@@ -132,7 +152,7 @@ export const AllergensManagement = () => {
                 </TableRow>
               </TableHead>
               <TableBody sx={{ backgroundColor: "#272437" }}>
-                {allergens.map((allergen, index) => (
+                {allergens?.map((allergen, index) => (
                   <TableRow key={index}>
                     <TableCell align="center" sx={{ color: "white" }}>
                       {allergen?.allergenId || index + 1}
@@ -149,6 +169,7 @@ export const AllergensManagement = () => {
                     </TableCell>
                     <TableCell sx={{ color: "white" }}>
                       <Switch
+                        checked={allergen?.status || false}
                         sx={{
                           "& .MuiSwitch-switchBase.Mui-checked": {
                             color: "#90BE6D",

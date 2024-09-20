@@ -6,14 +6,16 @@ import axios from "axios";
 export const AddAllergens = ({ onSave, allergen, onClose }) => {
   const [allergenName, setAllergenName] = useState("");
   const [abbreviation, setAbbreviation] = useState("");
-  const [status, setStatus] = useState(true);
+  const [status, setStatus] = useState(false);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    console.log(allergen, 'allergen')
     if (allergen) {
       setAllergenName(allergen?.allergenName || "");
       setAbbreviation(allergen?.abbreviation || "");
+      setStatus(allergen?.status || "");
     }
   }, [allergen]);
 
@@ -23,6 +25,7 @@ export const AddAllergens = ({ onSave, allergen, onClose }) => {
     const payload = {
       allergenName,
       abbreviation,
+      status
     };
     setLoading(true);
     try {

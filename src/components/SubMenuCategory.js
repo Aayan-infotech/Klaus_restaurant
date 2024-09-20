@@ -40,7 +40,7 @@ export const SubMenuCategory = () => {
           gutterBottom
           sx={{ color: "white", fontWeight: "bold" }}
         >
-          Sub Categories
+          Dishes
         </Typography>
       </Box>
 

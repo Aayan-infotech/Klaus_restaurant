@@ -30,6 +30,7 @@ export const ManagerManagement = () => {
   const [editingUser, setEditingUser] = useState(null);
   const [passwordVisibility, setPasswordVisibility] = useState({});
   const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
 
@@ -71,9 +72,14 @@ export const ManagerManagement = () => {
       const response = await axios.get(
         "https://viamenu.oa.r.appspot.com/viamenu/clients/client001/managers/all"
       );
-      setAllManagers(response?.data);
+      if (response?.data?.data?.length > 0) {
+        setAllManagers(response?.data?.data);
+      } else {
+        setErrorMessage(response?.data?.message || 'No managers available');
+      }
     } catch (error) {
       console.log(error, "Something went wrong");
+      setErrorMessage(error, "Failed to load menus.");
     } finally {
       setLoading(false);
     }
@@ -118,6 +124,20 @@ export const ManagerManagement = () => {
             Loading...
           </Typography>
         </Box>
+      ) : errorMessage ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100%",
+            minHeight: "300px",
+          }}
+        >
+          <Typography variant="h6" sx={{ color: "white" }}>
+            {errorMessage}
+          </Typography>
+        </Box>
       ) : (
         <TableContainer
           component={Paper}
@@ -139,7 +159,7 @@ export const ManagerManagement = () => {
               </TableRow>
             </TableHead>
             <TableBody sx={{ backgroundColor: "#272437" }}>
-              {allManagers.map((manager, index) => (
+              {allManagers?.map((manager, index) => (
                 <TableRow key={index}>
                   <TableCell align="center" sx={{ color: "white" }}>
                     {manager?.managerId}

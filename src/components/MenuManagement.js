@@ -17,6 +17,7 @@ import axios from "axios";
 export const MenuManagement = () => {
   const [allMenus, setAllMenus] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   // const handleViewDetails = (menu_id) => {
@@ -36,8 +37,13 @@ export const MenuManagement = () => {
       const response = await axios.get(
         "https://viamenu.oa.r.appspot.com/viamenu/clients/client001/menus/all"
       );
-      setAllMenus(response?.data);
+      if (response?.data?.data?.length > 0) {
+        setAllMenus(response?.data?.data);
+      } else {
+        setErrorMessage(response?.data?.message || 'No managers available');
+      }
     } catch (error) {
+      setErrorMessage(error, "Failed to load menus.");
       console.log(error, "Something went wrong");
     } finally {
       setLoading(false);
@@ -67,6 +73,20 @@ export const MenuManagement = () => {
             <CircularProgress sx={{ color: "#96FF7C" }} />
             <Typography variant="h6" sx={{ color: "white", marginLeft: 2 }}>
               Loading...
+            </Typography>
+          </Box>
+        ) : errorMessage ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+              minHeight: "300px",
+            }}
+          >
+            <Typography variant="h6" sx={{ color: "white" }}>
+              {errorMessage}
             </Typography>
           </Box>
         ) : (
