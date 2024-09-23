@@ -10,25 +10,28 @@ export const SubMenuCategory = () => {
   const navigate = useNavigate();
 
   const { menuId, categoryId } = useParams();
-  console.log(menuId, categoryId);
+  console.log(menuId, categoryId)
 
   useEffect(() => {
-    fetchCategoryItem();
-  }, []);
+    if (menuId && categoryId) {
+      fetchCategoryItem();
+    }
+  }, [menuId, categoryId]);
 
   const fetchCategoryItem = async () => {
     try {
       const response = await axios.get(
-        `https://viamenu.oa.r.appspot.com/viamenu/clients/client001/menus/${menuId}/categories/${categoryId}/items/all`
+        `https://viamenu.oa.r.appspot.com/viamenu/clients/client001/menus/${menuId}/categories/${categoryId}`
       );
-      console.log(response?.data);
-      setAllSubCategories(response?.data);
+      console.log(response?.data?.data, 'chekc data');
+      setAllSubCategories(response?.data?.data);
     } catch (error) {
       console.log(error, "something went wrong");
     }
   };
 
   const handleCardClick = (categoryDetails) => {
+    console.log(categoryDetails, 'categoryDetails')
     navigate("/home/recent-menu-details", { state: { categoryDetails } });
   };
 
@@ -55,13 +58,13 @@ export const SubMenuCategory = () => {
         }}
       >
         <Grid container spacing={2}>
-          {allSubCategories.map((item, index) => (
+          {/* {allSubCategories?.map((item, index) => ( */}
             <Grid
               item
               xs={12}
               sm={6}
               md={3}
-              key={index}
+              // key={index}
               sx={{
                 flex: "0 0 auto",
                 display: "flex",
@@ -69,7 +72,7 @@ export const SubMenuCategory = () => {
               }}
             >
               <Card
-                onClick={() => handleCardClick(item)}
+                onClick={() => handleCardClick(allSubCategories)}
                 sx={{
                   width: { xs: "120px", sm: "140px", md: "160px" },
                   height: { xs: "120px", sm: "140px", md: "160px" },
@@ -93,8 +96,8 @@ export const SubMenuCategory = () => {
                   }}
                 >
                   <img
-                    src={item?.image || menu2}
-                    alt={item?.title}
+                    src={menu2}
+                    // alt={item?.title}
                     style={{
                       width: "100%",
                       height: "100%",
@@ -119,12 +122,12 @@ export const SubMenuCategory = () => {
                       fontSize: { xs: "14px", sm: "16px", md: "17px" },
                     }}
                   >
-                    {item?.mainItemText}
+                    {allSubCategories?.categoryName}
                   </Typography>
                 </CardContent>
               </Card>
             </Grid>
-          ))}
+          {/* ))} */}
         </Grid>
       </Box>
     </Box>

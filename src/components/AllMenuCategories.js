@@ -19,23 +19,34 @@ export const AllMenuCategories = () => {
   };
 
   useEffect(() => {
-    fetchMenuCategory();
-    // fetchAllMenusImages();
-  }, []);
+    if (menuId) {
+      fetchMenuCategory();
+      // fetchAllMenusImages();
+    } else {
+      setLoading(false);
+    }
+  }, [menuId]);
 
   const fetchMenuCategory = async () => {
     try {
       const response = await axios.get(
         `https://viamenu.oa.r.appspot.com/viamenu/clients/client001/menus/${menuId}/categories/all`
       );
-      setAllCategories(response?.data);
-      console.log(response?.data, 'all categories')
+      const categories = response?.data?.data;
+      if (Array.isArray(categories)) {
+        setAllCategories(categories);
+      } else {
+        console.error('Categories data is not an array:', categories);
+        setAllCategories([]);
+      }
     } catch (error) {
       console.log(error, "Something went wrong");
+      setAllCategories([]);
     } finally {
       setLoading(false);
     }
   };
+  
 
   // const fetchAllMenusImages = async () => {
   //   try {

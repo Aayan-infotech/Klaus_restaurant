@@ -1,12 +1,35 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Grid, Typography, Box } from "@mui/material";
 import { useLocation } from 'react-router-dom';
 import menu2 from "../../src/assets/menuitems/menu2.png";
+import axios from 'axios';
 
 export const RecentMenuDetails = () => {
+  const [categoryMenuDetails, setCategoryMenuDetails] = useState(null);
   const location = useLocation();
   const recentList = location.state?.categoryDetails;
-  console.log(recentList, 'recentList')
+  const menuid = recentList?.menuId;
+  const categoryId = recentList?.clientId;
+
+
+  useEffect(() => {
+    if (menuid && categoryId) {
+      fetchCatMenuDetails();
+    }
+  }, [menuid, categoryId]);
+
+  const fetchCatMenuDetails = async () => {
+    try {
+      const response = await axios.get(
+        // `https://viamenu.oa.r.appspot.com/viamenu/clients/client001/menus/${recentList?.menuId}/categories/${recentList?.clientId}`
+        `https://viamenu.oa.r.appspot.com/viamenu/clients/client001/menus/${menuid}/categories/${categoryId}`
+      );
+      console.log(response, 'chekc data');
+      setCategoryMenuDetails(response?.data?.data);
+    } catch (error) {
+      console.log(error, "something went wrong");
+    }
+  };
 
   return (
     <Box>
