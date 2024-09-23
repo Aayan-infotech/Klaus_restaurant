@@ -78,7 +78,6 @@ export const ManagerManagement = () => {
         setErrorMessage(response?.data?.message || 'No managers available');
       }
     } catch (error) {
-      console.log(error, "Something went wrong");
       setErrorMessage(error, "Failed to load menus.");
     } finally {
       setLoading(false);
