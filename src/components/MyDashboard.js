@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/dashboard.css";
 import {
   Box,
@@ -12,15 +12,34 @@ import {
 import saladImage from "../../src/assets/dashboard/image-removebg-preview-photoaidcom-cropped.png";
 import menu_1 from "../../src/assets/dashboard/menu1.png";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const MyDashboard = () => {
   const navigate = useNavigate();
 
-  const statsData = [
-    { title: "Total Manager", value: 55 },
-    { title: "Total Menu", value: 30 },
-    { title: "Total Allergens", value: 44 },
-  ];
+ const [statsData, setStatsData] = useState([
+    { title: "Total Manager", value: 0 },
+    { title: "Total Menu", value: 0 },
+    { title: "Total Allergens", value: 0 },
+  ]);
+
+  useEffect(() => {
+    fetchDashboardTotal();
+  }, []);
+
+  const fetchDashboardTotal = async () => {
+    try {
+      const response = await axios.get('https://viamenu.oa.r.appspot.com/viamenu/clients/client001/dashboard/totals')
+     const { totalsManagers, totalMenus, totalAllergens } = response?.data?.data;
+      setStatsData([
+        { title: "Total Manager", value: totalsManagers },
+        { title: "Total Menu", value: totalMenus },
+        { title: "Total Allergens", value: totalAllergens }
+      ]);
+    } catch (error) {
+      console.log(error, 'something went wrong..!')
+    }
+  };
 
   const handleSeeClick = () => {
     navigate("/home/recent-menu-list");
@@ -34,7 +53,7 @@ const MyDashboard = () => {
             <Card sx={{ backgroundColor: "#1f1d2b", color: "white" }}>
               <CardContent>
                 <Typography variant="h5" textAlign="center" fontWeight="bold">
-                  {stat.title}
+                  {stat?.title}
                 </Typography>
                 <Typography
                   variant="h3"
@@ -42,7 +61,7 @@ const MyDashboard = () => {
                   color="green"
                   fontWeight="bold"
                 >
-                  {stat.value}
+                  {stat?.value}
                 </Typography>
               </CardContent>
             </Card>

@@ -21,7 +21,6 @@ export const RecentMenuDetails = () => {
   const fetchCatMenuDetails = async () => {
     try {
       const response = await axios.get(
-        // `https://viamenu.oa.r.appspot.com/viamenu/clients/client001/menus/${recentList?.menuId}/categories/${recentList?.clientId}`
         `https://viamenu.oa.r.appspot.com/viamenu/clients/client001/menus/${menuid}/categories/${categoryId}`
       );
       console.log(response, 'chekc data');

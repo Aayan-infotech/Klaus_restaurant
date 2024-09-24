@@ -249,6 +249,7 @@ export const AllergensManagement = () => {
           </TableContainer>
         )}
       </Box>
+      {/* //delete */}
       <Dialog
         onClose={handleClose}
         open={open}

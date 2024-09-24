@@ -9,7 +9,10 @@ import {
   TableHead,
   TableRow,
   Typography,
-  Paper, CircularProgress
+  Paper, CircularProgress, Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText, DialogTitle
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -24,6 +27,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export const ManagerManagement = () => {
+  const [open, setOpen] = useState(false);
   const [managers, setManagers] = useState([]);
   const [allManagers, setAllManagers] = useState([]);
   const [openAddUserDialog, setOpenAddUserDialog] = useState(false);
@@ -47,9 +51,14 @@ export const ManagerManagement = () => {
   };
 
   const handleDelete = (manager_id) => {
-    setManagers((prevManagers) =>
-      prevManagers.filter((manager) => manager.id !== manager_id)
-    );
+    console.log(manager_id, 'manager_id')
+    setManagers(manager_id)
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    // setManagers(null);
   };
 
   const handleAddUser = (user) => {
@@ -295,6 +304,84 @@ export const ManagerManagement = () => {
           </Table>
         </TableContainer>
       )}
+
+      {/* ----------delete------------- */}
+      <Dialog
+        // onClose={handleClose}
+        open={open}
+        sx={{
+          "& .MuiPaper-root": {
+            backgroundColor: "#1f1d2b",
+            width: "300px",
+            height: "300px",
+            padding: "0",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            border: "1px solid #90BE6D",
+            borderRadius: "20px",
+          },
+        }}
+      >
+        <DialogContent
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <DialogTitle
+            variant="h4"
+            sx={{
+              color: "white",
+              textAlign: "center",
+              padding: "0",
+              marginBottom: "8px",
+              fontWeight: "bold",
+            }}
+          >
+            Delete?
+          </DialogTitle>
+          <DialogContentText
+            sx={{
+              color: "white",
+              textAlign: "center",
+              marginBottom: "16px",
+            }}
+          >
+            Are you sure?
+          </DialogContentText>
+          <DialogActions
+            sx={{
+              justifyContent: "center",
+              width: "100%",
+              padding: "0",
+            }}
+          >
+            <Button
+              sx={{
+                backgroundColor: "#FF7CA3",
+                color: "white",
+                "&:hover": { backgroundColor: "#FF5A70" },
+                marginRight: "8px",
+              }}
+            >
+              Yes
+            </Button>
+            <Button
+              onClick={handleClose}
+              sx={{
+                backgroundColor: "#90BE6D",
+                color: "white",
+                "&:hover": { backgroundColor: "#74a85e" },
+              }}
+            >
+              No
+            </Button>
+          </DialogActions>
+        </DialogContent>
+      </Dialog>
       {openAddUserDialog && (
         <AddUser
           onAddUser={handleAddUser}
