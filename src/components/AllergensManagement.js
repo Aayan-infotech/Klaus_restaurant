@@ -31,6 +31,7 @@ export const AllergensManagement = () => {
   const [editingAllergen, setEditingAllergen] = useState(null);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   const handleClickOpen = (allergen) => {
     setSelectedAllergen(allergen);
@@ -69,6 +70,23 @@ export const AllergensManagement = () => {
       setLoading(false);
     }
   };
+
+  const handleDeleteAllergen = async () => {
+    if (!selectedAllergen) return;
+    setDeleteLoading(true);
+    try {
+      await axios.delete(
+        `https://viamenu.oa.r.appspot.com/viamenu/clients/client001/allergens/${selectedAllergen.allergenId}`
+      );
+      setAllergens(allergens.filter((a) => a.allergenId !== selectedAllergen.allergenId));
+      handleClose(); // Close the dialog after successful deletion
+    } catch (error) {
+      console.error("Failed to delete allergen:", error);
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
+
 
   return (
     <Box>
@@ -304,6 +322,7 @@ export const AllergensManagement = () => {
             }}
           >
             <Button
+              onClick={handleDeleteAllergen}
               sx={{
                 backgroundColor: "#FF7CA3",
                 color: "white",
