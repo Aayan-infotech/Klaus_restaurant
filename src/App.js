@@ -16,7 +16,7 @@ import {SubMenuCategory} from "./components/SubMenuCategory";
 
 function App() {
   return (
-    <Router>
+    <Router> 
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/home" element={<Home />}>
