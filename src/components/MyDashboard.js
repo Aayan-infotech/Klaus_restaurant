@@ -8,6 +8,7 @@ import {
   CardContent,
   Button,
   Avatar,
+  CircularProgress,
 } from "@mui/material";
 import saladImage from "../../src/assets/dashboard/image-removebg-preview-photoaidcom-cropped.png";
 import menu_1 from "../../src/assets/dashboard/menu1.png";
@@ -16,12 +17,12 @@ import axios from "axios";
 
 const MyDashboard = () => {
   const navigate = useNavigate();
-
- const [statsData, setStatsData] = useState([
+  const [statsData, setStatsData] = useState([
     { title: "Total Manager", value: 0 },
     { title: "Total Menu", value: 0 },
     { title: "Total Allergens", value: 0 },
   ]);
+  const [loading, setLoading] = useState(true); // New loading state
 
   useEffect(() => {
     fetchDashboardTotal();
@@ -29,21 +30,40 @@ const MyDashboard = () => {
 
   const fetchDashboardTotal = async () => {
     try {
-      const response = await axios.get('https://viamenu.oa.r.appspot.com/viamenu/clients/client001/dashboard/totals')
-     const { totalsManagers, totalMenus, totalAllergens } = response?.data?.data;
+      const response = await axios.get('https://viamenu.oa.r.appspot.com/viamenu/clients/client001/dashboard/totals');
+      const { totalsManagers, totalMenus, totalAllergens } = response?.data?.data;
       setStatsData([
         { title: "Total Manager", value: totalsManagers },
         { title: "Total Menu", value: totalMenus },
         { title: "Total Allergens", value: totalAllergens }
       ]);
+      setLoading(false); // Data fetched, set loading to false
     } catch (error) {
-      console.log(error, 'something went wrong..!')
+      console.log(error, 'something went wrong..!');
+      setLoading(false); // Set loading to false even if there is an error
     }
   };
 
   const handleSeeClick = () => {
     navigate("/home/recent-menu-list");
   };
+
+  if (loading) {
+    return (
+      <Box
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="50vh"
+      >
+        <Box display="flex" alignItems="center" gap={2}>
+          <CircularProgress sx={{ color: "#96FF7C" }} />
+          <Typography variant="h6">Loading...</Typography>
+        </Box>
+      </Box>
+    );
+  }
 
   return (
     <Box>
@@ -113,7 +133,7 @@ const MyDashboard = () => {
                   alignItems: "center",
                   justifyContent: "center",
                   gap: 1,
-                  marginTop:"50px"
+                  marginTop: "50px"
                 }}
               >
                 <Typography

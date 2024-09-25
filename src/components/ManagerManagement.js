@@ -32,6 +32,7 @@ export const ManagerManagement = () => {
   const [allManagers, setAllManagers] = useState([]);
   const [openAddUserDialog, setOpenAddUserDialog] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
+  const [deleting, setDeleting] = useState(false);
   const [passwordVisibility, setPasswordVisibility] = useState({});
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
@@ -92,6 +93,27 @@ export const ManagerManagement = () => {
       setLoading(false);
     }
   };
+
+  const deleteManager = async () => {
+    try {
+      setDeleting(true);
+      const response = await axios.delete(
+        `https://viamenu.oa.r.appspot.com/viamenu/clients/client001/managers/${managers}`
+      );
+      console.log("Manager deleted:", response);
+  
+      // Fetch the updated list of managers after deletion
+      fetchAllManagers();
+  
+      // Close the delete dialog
+      handleClose();
+    } catch (error) {
+      console.error("Failed to delete manager:", error);
+    }finally {
+      setDeleting(false); // Stop loading when deletion is complete
+    }
+  };
+  
 
   return (
     <Box>
@@ -360,6 +382,7 @@ export const ManagerManagement = () => {
             }}
           >
             <Button
+              onClick={()=>{deleteManager()}}
               sx={{
                 backgroundColor: "#FF7CA3",
                 color: "white",
