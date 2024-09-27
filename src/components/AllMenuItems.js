@@ -8,29 +8,29 @@ import {
   CircularProgress,
 } from "@mui/material";
 import menu1 from "../../src/assets/menuitems/menu.jpeg";
-import menu2 from "../../src/assets/menuitems/menu2.png";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 const categories = [
-  { title: "Soups", image: menu1 },
-  { title: "Appetizers", image: "", icon: "utensils" },
-  { title: "Salads", image: menu2 },
-  { title: "Main Courses", image: "", icon: "utensils" },
-  { title: "Pasta", image: menu1 },
-  { title: "Sandwiches", image: menu2 },
-  { title: "Soups", image: menu1 },
-  { title: "Appetizers", image: "", icon: "utensils" },
-  { title: "Salads", image: menu2 },
-  { title: "Main Courses", image: "", icon: "utensils" },
-  { title: "Pasta", image: menu1 },
-  { title: "Sandwiches", image: menu2 },
-  { title: "Soups", image: menu1 },
-  { title: "Appetizers", image: "", icon: "utensils" },
-  { title: "Salads", image: menu2 },
-  { title: "Main Courses", image: "", icon: "utensils" },
-  { title: "Pasta", image: menu1 },
-  { title: "Sandwiches", image: menu2 },
+  {
+    success: true,
+    status: 200,
+    message: "Category list retrieved successfully.",
+    data: [
+      {
+        clientId: "client_1",
+        menuId: "menu_2",
+        categoryId: "category_2",
+        categoryName: "pizza",
+        parentCategroryId: "category_1",
+        hasImage: true,
+        imageUrl:
+          "https://storage.googleapis.com/firsttest-8a340.appspot.com/viamenu/viamenu/client_1/menu_2/category_2/category_2?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=firebase-adminsdk-9916z%40firsttest-8a340.iam.gserviceaccount.com%2F20240926%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20240926T094203Z&X-Goog-Expires=604800&X-Goog-SignedHeaders=host&X-Goog-Signature=73c97384e152d26bc97492dc917b2097acb53c7b30fd60c77ba053e1d56a5b0780df5a20c4a95529647e6748d28f64aa7cbf22873767e55465e8087303b791f31d5b8cc81d234b8bd00d0c66bdd40669f605057a341ca19090c1fc25876e56cf7d1d886c41d004fddc02a8030df169602aa058323882bfb11885fb0fc9d4ff6ebde53b403e6c43c0984078c5d7da79dd28b099dff1593bff3cfce3d3f1ddcafc6a5a6178302a14935e7e358e20a39edf6f6c38aa93f69018ba3e23b7544085f5a1b0ddae1dd789c59d312ced9a41cb9ab6a0ab07ddc4c66c66df85ca939f8019b87a12eb3c6d431a0a5fa64ec545472a36e778a4f6e15e1f7d46abfa69457802",
+        createdAt: 1727090727366,
+        lastUpdateAt: 1727090727366,
+      },
+    ],
+  },
 ];
 
 export const AllMenuItems = () => {
@@ -65,8 +65,13 @@ export const AllMenuItems = () => {
   };
 
   const handleCardClick = (category) => {
-    navigate(`/home/recent-submenu/${category.id}`, { state: { category } });
+    navigate("/home/recent-submenu", { state: { topRecentItems: category } });
   };
+
+  // const handleCardClick = (category) => {
+  //   console.log(category, 'category');
+  //   navigate(`/home/recent-submenu/${category?.categoryId}?menuId=${category?.menuId}&categoryId=${category.categoryId}`);
+  // };
 
   return (
     <Box>
@@ -121,7 +126,8 @@ export const AllMenuItems = () => {
           }}
         >
           <Grid container spacing={2}>
-            {categories.map((item, index) => (
+            {/* {categories[0]?.data?.map((item, index) => ( topRecentCategory */}
+            {topRecentCategory?.map((item, index) => (
               <Grid
                 item
                 xs={12}
@@ -158,10 +164,10 @@ export const AllMenuItems = () => {
                       height: "80px",
                     }}
                   >
-                    {item.image ? (
+                    {item?.imageUrl ? (
                       <img
-                        src={item.image}
-                        alt={item.title}
+                        src={item?.imageUrl || menu1}
+                        alt={item?.menuId}
                         style={{
                           width: "100%",
                           height: "100%",
@@ -182,7 +188,7 @@ export const AllMenuItems = () => {
                         }}
                       >
                         <i
-                          className={`fa-solid fa-${item.icon}`}
+                          // className={`fa-solid fa-${item?.icon}`}
                           style={{
                             fontSize: "40px",
                             color: "#27213C",
@@ -206,7 +212,7 @@ export const AllMenuItems = () => {
                         fontSize: { xs: "14px", sm: "16px", md: "17px" },
                       }}
                     >
-                      {item.title}
+                      {item?.categoryName || "Penuts"}
                     </Typography>
                   </CardContent>
                 </Card>
