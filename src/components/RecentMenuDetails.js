@@ -11,6 +11,7 @@ export const RecentMenuDetails = () => {
   const menuid = recentList?.menuId;
   const categoryId = recentList?.clientId;
 
+  const storedClientId = localStorage.getItem("clientId");
 
   useEffect(() => {
     if (menuid && categoryId) {
@@ -21,9 +22,8 @@ export const RecentMenuDetails = () => {
   const fetchCatMenuDetails = async () => {
     try {
       const response = await axios.get(
-        `https://viamenu.oa.r.appspot.com/viamenu/clients/client001/menus/${menuid}/categories/${categoryId}`
+        `https://viamenu.oa.r.appspot.com/viamenu/clients/${storedClientId}/menus/${menuid}/categories/${categoryId}`
       );
-      console.log(response, 'chekc data');
       setCategoryMenuDetails(response?.data?.data);
     } catch (error) {
       console.log(error, "something went wrong");

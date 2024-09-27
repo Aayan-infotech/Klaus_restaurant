@@ -10,7 +10,7 @@ export const SubMenuCategory = () => {
   const navigate = useNavigate();
 
   const { menuId, categoryId } = useParams();
-  console.log(menuId, categoryId)
+  const storedClientId = localStorage.getItem("clientId");
 
   useEffect(() => {
     if (menuId && categoryId) {
@@ -21,9 +21,8 @@ export const SubMenuCategory = () => {
   const fetchCategoryItem = async () => {
     try {
       const response = await axios.get(
-        `https://viamenu.oa.r.appspot.com/viamenu/clients/client001/menus/${menuId}/categories/${categoryId}`
+        `https://viamenu.oa.r.appspot.com/viamenu/clients/${storedClientId}/menus/${menuId}/categories/${categoryId}`
       );
-      console.log(response?.data?.data, 'chekc data');
       setAllSubCategories(response?.data?.data);
     } catch (error) {
       console.log(error, "something went wrong");

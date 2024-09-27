@@ -24,7 +24,7 @@ function App() {
           <Route path="manager-management" element={<ManagerManagement />} />
           <Route path="menu-management" element={<MenuManagement />} />
           <Route path="allergens-management" element={<AllergensManagement />} />
-          <Route path="recent-menu-list" element={<AllMenuItems />} />
+          <Route path="recent-menu-list/:id" element={<AllMenuItems />} />
           <Route path="recent-submenu/:id" element={<SubMenuItemsDetails />} />
           <Route path="all-categories/:id" element={<AllMenuCategories />} />
           <Route path="sub-category/:menuId/:categoryId" element={<SubMenuCategory />} />

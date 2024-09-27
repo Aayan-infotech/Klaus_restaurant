@@ -9,10 +9,13 @@ import {
   TableHead,
   TableRow,
   Typography,
-  Paper, CircularProgress, Dialog,
+  Paper,
+  CircularProgress,
+  Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText, DialogTitle
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -25,6 +28,8 @@ import {
 import { AddUser } from "../../src/components/AddUser";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const ManagerManagement = () => {
   const [open, setOpen] = useState(false);
@@ -38,13 +43,14 @@ export const ManagerManagement = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
+  const storedClientId = localStorage.getItem("clientId");
 
   const handleClickOpen = (manager) => {
     navigate("/home/manager-details", { state: { manager } });
   };
 
   const handleTogglePassword = (managerId) => {
-    console.log(managerId, 'managerId');
+    console.log(managerId, "managerId");
     setPasswordVisibility((prevState) => ({
       ...prevState,
       [managerId]: !prevState[managerId],
@@ -52,8 +58,7 @@ export const ManagerManagement = () => {
   };
 
   const handleDelete = (manager_id) => {
-    console.log(manager_id, 'manager_id')
-    setManagers(manager_id)
+    setManagers(manager_id);
     setOpen(true);
   };
 
@@ -80,12 +85,12 @@ export const ManagerManagement = () => {
   const fetchAllManagers = async () => {
     try {
       const response = await axios.get(
-        "https://viamenu.oa.r.appspot.com/viamenu/clients/client001/managers/all"
+        `https://viamenu.oa.r.appspot.com/viamenu/clients/${storedClientId}/managers/all`
       );
       if (response?.data?.data?.length > 0) {
         setAllManagers(response?.data?.data);
       } else {
-        setErrorMessage(response?.data?.message || 'No managers available');
+        setErrorMessage(response?.data?.message || "No managers available");
       }
     } catch (error) {
       setErrorMessage(error, "Failed to load menus.");
@@ -98,25 +103,50 @@ export const ManagerManagement = () => {
     try {
       setDeleting(true);
       const response = await axios.delete(
-        `https://viamenu.oa.r.appspot.com/viamenu/clients/client001/managers/${managers}`
+        `https://viamenu.oa.r.appspot.com/viamenu/clients/${storedClientId}/managers/${managers}`
       );
-      console.log("Manager deleted:", response);
-  
-      // Fetch the updated list of managers after deletion
       fetchAllManagers();
-  
-      // Close the delete dialog
       handleClose();
     } catch (error) {
       console.error("Failed to delete manager:", error);
-    }finally {
-      setDeleting(false); // Stop loading when deletion is complete
+    } finally {
+      setDeleting(false);
     }
   };
-  
+
+  const handleSendEmail = async (manager) => {
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        "https://viamenu.oa.r.appspot.com/viamenu/sendEmail",
+        {
+          // managerId: manager?.managerId,
+          emailAddress: manager?.email,
+          subject: "Test",
+          message: "hello abinash",
+        }
+      );
+      if (response.data.success) {
+        toast.success(response.data.message, {
+          autoClose: 3000,
+        });
+      } else {
+        toast.error(response.data.message, {
+          autoClose: 3000,
+        });
+      }
+    } catch (error) {
+      toast.error(error.data.message, {
+        autoClose: 3000,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Box>
+      <ToastContainer />
       <Box
         sx={{
           display: "flex",
@@ -217,13 +247,23 @@ export const ManagerManagement = () => {
                       }}
                     >
                       <FontAwesomeIcon
-                        icon={passwordVisibility[manager?.managerId] ? faEye : faEyeSlash}
+                        icon={
+                          passwordVisibility[manager?.managerId]
+                            ? faEye
+                            : faEyeSlash
+                        }
                       />
                     </Button>
                   </TableCell>
-                  <TableCell sx={{ color: "white" }}>{manager?.firstName}</TableCell>
-                  <TableCell sx={{ color: "white" }}>{manager?.email}</TableCell>
-                  <TableCell sx={{ color: "white" }}>{manager?.phone}</TableCell>
+                  <TableCell sx={{ color: "white" }}>
+                    {manager?.firstName}
+                  </TableCell>
+                  <TableCell sx={{ color: "white" }}>
+                    {manager?.email}
+                  </TableCell>
+                  <TableCell sx={{ color: "white" }}>
+                    {manager?.phone}
+                  </TableCell>
                   <TableCell
                     sx={{
                       display: "flex",
@@ -315,9 +355,28 @@ export const ManagerManagement = () => {
                         borderColor: "#96FF7C",
                         color: "#96FF7C",
                         textTransform: "none",
+                        position: "relative",
                       }}
+                      onClick={() => handleSendEmail(manager)}
+                      disabled={loading}
                     >
-                      Send Email
+                      {loading ? (
+                        <>
+                          <CircularProgress
+                            size={24}
+                            color="inherit"
+                            sx={{
+                              position: "absolute",
+                              left: "50%",
+                              top: "50%",
+                              transform: "translate(-50%, -50%)",
+                            }}
+                          />
+                          Sending...
+                        </>
+                      ) : (
+                        "Send Email"
+                      )}
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -382,7 +441,9 @@ export const ManagerManagement = () => {
             }}
           >
             <Button
-              onClick={()=>{deleteManager()}}
+              onClick={() => {
+                deleteManager();
+              }}
               sx={{
                 backgroundColor: "#FF7CA3",
                 color: "white",
@@ -409,6 +470,7 @@ export const ManagerManagement = () => {
         <AddUser
           onAddUser={handleAddUser}
           userToEdit={editingUser}
+          storedClientId={storedClientId}
           onClose={() => {
             setOpenAddUserDialog(false);
             setEditingUser(null);

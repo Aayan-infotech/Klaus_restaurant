@@ -7,12 +7,12 @@ import axios from "axios";
 
 export const AllMenuCategories = () => {
   const [allCategories, setAllCategories] = useState([]);
-  const [menuImages, setMenuImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
   const menuId = id;
 
   const navigate = useNavigate();
+  const storedClientId = localStorage.getItem("clientId");
 
   const handleCardClick = (menuId, categoryId) => {
     navigate(`/home/sub-category/${menuId}/${categoryId}`);
@@ -30,7 +30,7 @@ export const AllMenuCategories = () => {
   const fetchMenuCategory = async () => {
     try {
       const response = await axios.get(
-        `https://viamenu.oa.r.appspot.com/viamenu/clients/client001/menus/${menuId}/categories/all`
+        `https://viamenu.oa.r.appspot.com/viamenu/clients/${storedClientId}/menus/${menuId}/categories/all`
       );
       const categories = response?.data?.data;
       if (Array.isArray(categories)) {
@@ -46,21 +46,6 @@ export const AllMenuCategories = () => {
       setLoading(false);
     }
   };
-  
-
-  // const fetchAllMenusImages = async () => {
-  //   try {
-  //     const response = await axios.get(
-  //       `https://viamenu.oa.r.appspot.com/viamenu/clients/client001/menus/${menuId}/images/all`
-  //     );
-  //     const images = response.data;
-  //     setMenuImages(images);
-  //   } catch (error) {
-  //     console.log(error, "Something went wrong");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   return (
     <Box>

@@ -33,6 +33,8 @@ export const AllergensManagement = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [deleteLoading, setDeleteLoading] = useState(false);
 
+  const storedClientId = localStorage.getItem("clientId");
+
   const handleClickOpen = (allergen) => {
     setSelectedAllergen(allergen);
     setOpen(true);
@@ -56,7 +58,7 @@ export const AllergensManagement = () => {
   const fetchAllAllergens = async () => {
     try {
       const response = await axios.get(
-        "https://viamenu.oa.r.appspot.com/viamenu/clients/client001/allergens/all"
+        `https://viamenu.oa.r.appspot.com/viamenu/clients/${storedClientId}/allergens/all`
       );
       if (response?.data?.data?.length > 0) {
         setAllergens(response?.data?.data);
@@ -76,10 +78,10 @@ export const AllergensManagement = () => {
     setDeleteLoading(true);
     try {
       await axios.delete(
-        `https://viamenu.oa.r.appspot.com/viamenu/clients/client001/allergens/${selectedAllergen.allergenId}`
+        `https://viamenu.oa.r.appspot.com/viamenu/clients/${storedClientId}/allergens/${selectedAllergen.allergenId}`
       );
       setAllergens(allergens.filter((a) => a.allergenId !== selectedAllergen.allergenId));
-      handleClose(); // Close the dialog after successful deletion
+      handleClose(); 
     } catch (error) {
       console.error("Failed to delete allergen:", error);
     } finally {
@@ -374,6 +376,7 @@ export const AllergensManagement = () => {
         <AddAllergens
           allergen={editingAllergen}
           onSave={handleAddAllergen}
+          storedClientId={storedClientId}
           onCancel={() => setOpenAddAllergensDialog(false)}
           onClose={() => setOpenAddAllergensDialog(false)}
         />

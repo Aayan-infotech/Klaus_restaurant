@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 
-export const AddUser = ({ onAddUser, userToEdit, onClose }) => {
+export const AddUser = ({ onAddUser, userToEdit, onClose, storedClientId }) => {
   const [open, setOpen] = useState(true);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -50,12 +50,12 @@ export const AddUser = ({ onAddUser, userToEdit, onClose }) => {
       let response;
       if (userToEdit) {
         response = await axios.put(
-          `https://viamenu.oa.r.appspot.com/viamenu/clients/client001/managers/${userToEdit?.managerId}`,
+          `https://viamenu.oa.r.appspot.com/viamenu/clients/${storedClientId}/managers/${userToEdit?.managerId}`,
           payload
         );
       } else {
         response = await axios.post(
-          "https://viamenu.oa.r.appspot.com/viamenu/clients/client001/managers/",
+          `https://viamenu.oa.r.appspot.com/viamenu/clients/${storedClientId}/managers`,
           payload
         );
       }

@@ -20,6 +20,8 @@ export const MenuManagement = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
+  const storedClientId = localStorage.getItem("clientId");
+
   // const handleViewDetails = (menu_id) => {
   //   navigate("/home/all-categories", { state: { menu_id } });
   // };
@@ -35,7 +37,7 @@ export const MenuManagement = () => {
   const fetchAllMenus = async () => {
     try {
       const response = await axios.get(
-        "https://viamenu.oa.r.appspot.com/viamenu/clients/client001/menus/all"
+        `https://viamenu.oa.r.appspot.com/viamenu/clients/${storedClientId}/menus/all`
       );
       if (response?.data?.data?.length > 0) {
         setAllMenus(response?.data?.data);
