@@ -66,8 +66,8 @@ export const Login = () => {
           <Box
             sx={{
               position: "absolute",
-              top: "10%",
-              left: "20%",
+              top: "30%",
+              left: "25%",
               width: "100%",
               display: "flex",
               flexDirection: "column",
@@ -83,7 +83,7 @@ export const Login = () => {
               color="success.main"
               sx={{
                 fontWeight: "bold",
-                fontSize: { xs: "2rem", sm: "3rem", md: "4rem" },
+                fontSize: { xs: "3rem", sm: "4rem", md: "5rem" },
               }}
             >
               Klaus

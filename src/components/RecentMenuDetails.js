@@ -8,6 +8,7 @@ export const RecentMenuDetails = () => {
   const [categoryMenuDetails, setCategoryMenuDetails] = useState(null);
   const location = useLocation();
   const recentList = location.state?.categoryDetails;
+  console.log(recentList, 'recentList')
   const menuid = recentList?.menuId;
   const categoryId = recentList?.clientId;
 
@@ -23,8 +24,10 @@ export const RecentMenuDetails = () => {
     try {
       const response = await axios.get(
         `https://viamenu.oa.r.appspot.com/viamenu/clients/${storedClientId}/menus/${menuid}/categories/${categoryId}`
+        // `https://viamenu.oa.r.appspot.com/viamenu/clients/${storedClientId}/menus/${menuid}/categories/${categoryId}/items/all`
       );
-      setCategoryMenuDetails(response?.data?.data);
+      console.log(response?.data?.data, 'response?.data?.data');
+      // setCategoryMenuDetails(response?.data?.data);
     } catch (error) {
       console.log(error, "something went wrong");
     }
@@ -83,7 +86,7 @@ export const RecentMenuDetails = () => {
             <Grid item xs={12} md={9}>
               <Box>
                 <Typography sx={{ color: "#90BE6D", fontWeight: "bold" }}> {recentList?.mainItemText || recentList?.category || 'N/A'}</Typography>
-                <Typography sx={{ marginTop: 2, color: "#90BE6D", fontWeight: "bold" }}>$ {recentList?.price || 'N/A'}</Typography>
+                <Typography sx={{ marginTop: 2, color: "#90BE6D", fontWeight: "bold" }}>{recentList?.price || 'N/A'}</Typography>
                 <Typography sx={{ marginTop: 2, color: "#90BE6D", fontWeight: "bold" }}>{recentList?.category || 'N/A'}</Typography>
                 <Typography sx={{ marginTop: 2, color: "#90BE6D", fontWeight: "bold" }}>{recentList?.menu_item || 'N/A'}</Typography>
                 <Typography sx={{ marginTop: 2, color: "#90BE6D", fontWeight: "bold" }}>{recentList?.allergens || 'N/A'}</Typography>

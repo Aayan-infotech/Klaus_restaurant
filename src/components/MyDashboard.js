@@ -253,7 +253,7 @@ const MyDashboard = () => {
                     >
                       <Typography
                         variant="body1"
-                        sx={{ flex: 1, fontWeight: "bold" }}
+                        sx={{ flex: 1, fontWeight: "bold", maxWidth:180 }}
                       >
                         <Avatar
                           src={menu.hasImage ? menu.imageUrl : menu_1}
