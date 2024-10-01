@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Grid, Typography, Box } from "@mui/material";
 import { useLocation } from 'react-router-dom';
 import menu2 from "../../src/assets/menuitems/menu2.png";
 import axios from 'axios';
 
 export const RecentMenuDetails = () => {
-  const [categoryMenuDetails, setCategoryMenuDetails] = useState(null);
+  // const [categoryMenuDetails, setCategoryMenuDetails] = useState(null);
   const location = useLocation();
   const recentList = location.state?.categoryDetails;
   console.log(recentList, 'recentList')

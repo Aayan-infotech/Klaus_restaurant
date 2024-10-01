@@ -15,15 +15,18 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle, CircularProgress
+  DialogTitle,
+  CircularProgress,
+  TablePagination,
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { AddAllergens } from "./AddAllergens";
 import axios from "axios";
+import { Navbar } from "./Navbar";
 
 export const AllergensManagement = () => {
-  const [allergens, setAllergens] = useState([]);
+  const [allAllergens, setAllAllergens] = useState([]);
 
   const [open, setOpen] = useState(false);
   const [selectedAllergen, setSelectedAllergen] = useState(null);
@@ -32,6 +35,10 @@ export const AllergensManagement = () => {
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [filteredAllergens, setFilteredAllergens] = useState([]);
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const storedClientId = localStorage.getItem("clientId");
 
@@ -61,9 +68,10 @@ export const AllergensManagement = () => {
         `https://viamenu.oa.r.appspot.com/viamenu/clients/${storedClientId}/allergens/all`
       );
       if (response?.data?.data?.length > 0) {
-        setAllergens(response?.data?.data);
+        setAllAllergens(response?.data?.data);
+        setFilteredAllergens(response?.data?.data);
       } else {
-        setErrorMessage(response?.data?.message || 'No managers available');
+        setErrorMessage(response?.data?.message || "No managers available");
       }
     } catch (error) {
       setErrorMessage(error, "Failed to load menus.");
@@ -73,6 +81,16 @@ export const AllergensManagement = () => {
     }
   };
 
+  // Step : Filter menu based on search query
+  const handleSearch = (searchTerm) => {
+    const filtered = allAllergens.filter((allergens) => {
+      const allergenName = allergens?.allergenName?.toLowerCase();
+      const searchLower = searchTerm.toLowerCase();
+      return allergenName.includes(searchLower);
+    });
+    setFilteredAllergens(filtered);
+  };
+
   const handleDeleteAllergen = async () => {
     if (!selectedAllergen) return;
     setDeleteLoading(true);
@@ -80,8 +98,10 @@ export const AllergensManagement = () => {
       await axios.delete(
         `https://viamenu.oa.r.appspot.com/viamenu/clients/${storedClientId}/allergens/${selectedAllergen.allergenId}`
       );
-      setAllergens(allergens.filter((a) => a.allergenId !== selectedAllergen.allergenId));
-      handleClose(); 
+      setAllAllergens(
+        allAllergens.filter((a) => a.allergenId !== selectedAllergen.allergenId)
+      );
+      handleClose();
     } catch (error) {
       console.error("Failed to delete allergen:", error);
     } finally {
@@ -89,9 +109,28 @@ export const AllergensManagement = () => {
     }
   };
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const displayedAllergens = filteredAllergens.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
 
   return (
     <Box>
+      <Navbar
+        open={open}
+        handleDrawerOpen={() => setOpen(true)}
+        handleSearch={handleSearch}
+        showSearch={true}
+      />
       <Box
         sx={{
           display: "flex",
@@ -118,11 +157,12 @@ export const AllergensManagement = () => {
           Add Allergens
         </Button>
       </Box>
+
       <Box
         sx={{
-          overflowY: "auto",
-          maxHeight: "450px",
-          scrollbarWidth: "none",
+          display: "flex",
+          flexDirection: "column", 
+          height: "100%",
         }}
       >
         {loading ? (
@@ -155,120 +195,161 @@ export const AllergensManagement = () => {
             </Typography>
           </Box>
         ) : (
-          <TableContainer
-            component={Paper}
-            sx={{ marginTop: "20px", backgroundColor: "#1f1d2b" }}
-          >
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell align="center" sx={{ color: "white" }}>
-                    SI No
-                  </TableCell>
-                  <TableCell sx={{ color: "white" }}>Allergen Name</TableCell>
-                  <TableCell sx={{ color: "white" }}>Abbreviation</TableCell>
-                  <TableCell sx={{ color: "white" }}>Status</TableCell>
-                  <TableCell sx={{ color: "white" }}>Action</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody sx={{ backgroundColor: "#272437" }}>
-                {allergens?.map((allergen, index) => (
-                  <TableRow key={index}>
-                    <TableCell align="center" sx={{ color: "white" }}>
-                      {allergen?.allergenId || index + 1}
-                    </TableCell>
-                    <TableCell sx={{ color: "white" }}>
-                      {allergen?.allergenName || "N/A"}
-                    </TableCell>
-                    <TableCell sx={{ color: "white" }}>
-                      {allergen?.abbreviation
-                        ? allergen.abbreviation.length > 10
-                          ? `${allergen.abbreviation.slice(0, 10)}...`
-                          : allergen.abbreviation
-                        : "N/A"}
-                    </TableCell>
-                    <TableCell sx={{ color: "white" }}>
-                      <Switch
-                        checked={allergen?.status || false}
-                        sx={{
-                          "& .MuiSwitch-switchBase.Mui-checked": {
-                            color: "#90BE6D",
-                          },
-                          "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track":
-                          {
-                            backgroundColor: "#90BE6D",
-                          },
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Button
-                        variant="outlined"
-                        sx={{
-                          minWidth: "auto",
-                          width: "40px",
-                          height: "40px",
-                          padding: 0,
-                          borderRadius: "10px",
-                          marginRight: 1,
-                          borderColor: "#7CEFFF",
-                          color: "#7CEFFF",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          "&:hover": {
-                            borderColor: "#7CEFFF",
-                            backgroundColor: "rgba(150, 255, 124, 0.1)",
-                          },
-                        }}
-                        onClick={() => {
-                          setEditingAllergen(allergen);
-                          setOpenAddAllergensDialog(true);
-                        }}
-                      >
-                        <FontAwesomeIcon
-                          icon={faPenToSquare}
-                          style={{ color: "#7CEFFF" }}
-                        />
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        onClick={() => handleClickOpen(allergen)}
-                        sx={{
-                          minWidth: "auto",
-                          width: "40px",
-                          height: "40px",
-                          padding: 0,
-                          borderRadius: "10px",
-                          borderColor: "#FF7CA3",
-                          color: "#FF7CA3",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          "&:hover": {
-                            borderColor: "#FF7CA3",
-                            backgroundColor: "rgba(150, 255, 124, 0.1)",
-                          },
-                        }}
-                      >
-                        <FontAwesomeIcon
-                          icon={faTrash}
-                          style={{ color: "#FF7CA3" }}
-                        />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <>
+            {/* Scrollable Table Section */}
+            <Box
+              sx={{
+                overflowY: "auto",
+                maxHeight: "450px",
+                scrollbarWidth: "none",
+              }}
+            >
+              <TableContainer
+                component={Paper}
+                sx={{ marginTop: "20px", backgroundColor: "#1f1d2b" }}
+              >
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="center" sx={{ color: "white" }}>
+                        SI No
+                      </TableCell>
+                      <TableCell sx={{ color: "white" }}>
+                        Allergen Name
+                      </TableCell>
+                      <TableCell sx={{ color: "white" }}>
+                        Abbreviation
+                      </TableCell>
+                      <TableCell sx={{ color: "white" }}>Status</TableCell>
+                      <TableCell sx={{ color: "white" }}>Action</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody sx={{ backgroundColor: "#272437" }}>
+                    {displayedAllergens.length > 0 ? (
+                      displayedAllergens?.map((allergen, index) => (
+                        <TableRow key={index}>
+                          <TableCell align="center" sx={{ color: "white" }}>
+                            {index + 1}
+                          </TableCell>
+                          <TableCell sx={{ color: "white" }}>
+                            {allergen?.allergenName || "N/A"}
+                          </TableCell>
+                          <TableCell sx={{ color: "white" }}>
+                            {allergen?.abbreviation
+                              ? allergen.abbreviation.length > 10
+                                ? `${allergen.abbreviation.slice(0, 50)}...`
+                                : allergen.abbreviation
+                              : "N/A"}
+                          </TableCell>
+                          <TableCell sx={{ color: "white" }}>
+                            <Switch
+                              checked={allergen?.status || false}
+                              sx={{
+                                "& .MuiSwitch-switchBase.Mui-checked": {
+                                  color: "#90BE6D",
+                                },
+                                "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track":
+                                  {
+                                    backgroundColor: "#90BE6D",
+                                  },
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Button
+                              variant="outlined"
+                              sx={{
+                                minWidth: "auto",
+                                width: "40px",
+                                height: "40px",
+                                padding: 0,
+                                borderRadius: "10px",
+                                marginRight: 1,
+                                borderColor: "#7CEFFF",
+                                color: "#7CEFFF",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                "&:hover": {
+                                  borderColor: "#7CEFFF",
+                                  backgroundColor: "rgba(150, 255, 124, 0.1)",
+                                },
+                              }}
+                              onClick={() => {
+                                setEditingAllergen(allergen);
+                                setOpenAddAllergensDialog(true);
+                              }}
+                            >
+                              <FontAwesomeIcon
+                                icon={faPenToSquare}
+                                style={{ color: "#7CEFFF" }}
+                              />
+                            </Button>
+                            <Button
+                              variant="outlined"
+                              onClick={() => handleClickOpen(allergen)}
+                              sx={{
+                                minWidth: "auto",
+                                width: "40px",
+                                height: "40px",
+                                padding: 0,
+                                borderRadius: "10px",
+                                borderColor: "#FF7CA3",
+                                color: "#FF7CA3",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                "&:hover": {
+                                  borderColor: "#FF7CA3",
+                                  backgroundColor: "rgba(150, 255, 124, 0.1)",
+                                },
+                              }}
+                            >
+                              <FontAwesomeIcon
+                                icon={faTrash}
+                                style={{ color: "#FF7CA3" }}
+                              />
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell
+                          colSpan={5}
+                          sx={{ textAlign: "center", color: "white" }}
+                        >
+                          No allergens found
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Box>
+
+            {/* Pagination Section */}
+            <TablePagination
+              rowsPerPageOptions={[
+                5, 10, 20, 30, 40, 50, 70, 100, 125, 150, 175, 200,
+              ]}
+              component="div"
+              count={filteredAllergens.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              sx={{ backgroundColor: "#1f1d2b", color: "white" }}
+            />
+          </>
         )}
       </Box>
+
       {/* //delete */}
       <Dialog
         onClose={handleClose}

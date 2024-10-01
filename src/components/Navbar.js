@@ -5,9 +5,10 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import Typography from "@mui/material/Typography";
-import SearchIcon from "@mui/icons-material/Search";
-import { Box, TextField } from "@mui/material";
+// import SearchIcon from "@mui/icons-material/Search";
+// import { Box, TextField } from "@mui/material";
 import { useLocation } from "react-router-dom";
+import { Search } from "./Search";
 
 const drawerWidth = 300;
 
@@ -35,7 +36,7 @@ const formatBreadcrumb = (segment) => {
     .replace(/\b\w/g, (char) => char.toUpperCase());
 };
 
-export const Navbar = ({ open, handleDrawerOpen }) => {
+export const Navbar = ({ open, handleDrawerOpen, handleSearch, showSearch }) => {
   const location = useLocation();
   const currentPath = location.pathname;
 
@@ -75,29 +76,7 @@ export const Navbar = ({ open, handleDrawerOpen }) => {
         >
           {breadcrumb}
         </Typography>
-        <Box
-          sx={{
-            backgroundColor: "#373642",
-            borderRadius: 1,
-            padding: "5px 10px",
-            display:"flex", alignItems:"center"
-          }}
-        >
-          <SearchIcon sx={{marginRight:"5px"}}/>
-          <TextField
-            placeholder="Search for food, coffee, etc..."
-            variant="standard"
-            InputProps={{
-              disableUnderline: true,
-              style: { color: "white" },
-            }}
-            // sx={{
-            //   backgroundColor: "#2d2c3c",
-            //   borderRadius: 1,
-            //   padding: "0 8px",
-            // }}
-          />
-        </Box>
+        {showSearch && <Search handleSearch={handleSearch} />}
       </Toolbar>
     </AppBar>
   );
