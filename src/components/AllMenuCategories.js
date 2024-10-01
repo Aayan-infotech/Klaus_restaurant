@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Grid, Card, Typography, Box, CardContent, CircularProgress } from "@mui/material";
+import {
+  Grid,
+  Card,
+  Typography,
+  Box,
+  CardContent,
+  CircularProgress,
+} from "@mui/material";
 import "../../src/styles/dashboard.css";
 import menu2 from "../../src/assets/menuitems/menu2.png";
 import { useNavigate, useParams } from "react-router-dom";
@@ -14,8 +21,10 @@ export const AllMenuCategories = () => {
   const navigate = useNavigate();
   const storedClientId = localStorage.getItem("clientId");
 
-  const handleCardClick = (menuId, categoryId) => {
-    navigate(`/home/sub-category/${menuId}/${categoryId}`);
+  const handleCardClick = (item) => {
+    // console.log(item, "item----------");
+    navigate("/home/sub-category", { state: { allCategery: item } });
+    // navigate(`/home/sub-category/${menuId}/${categoryId}`);
   };
 
   useEffect(() => {
@@ -36,7 +45,7 @@ export const AllMenuCategories = () => {
       if (Array.isArray(categories)) {
         setAllCategories(categories);
       } else {
-        console.error('Categories data is not an array:', categories);
+        console.error("Categories data is not an array:", categories);
         setAllCategories([]);
       }
     } catch (error) {
@@ -49,7 +58,7 @@ export const AllMenuCategories = () => {
 
   return (
     <Box>
-      <Box >
+      <Box>
         <Typography
           variant="h6"
           gutterBottom
@@ -69,10 +78,7 @@ export const AllMenuCategories = () => {
           }}
         >
           <CircularProgress sx={{ color: "white" }} />
-          <Typography
-            variant="h6"
-            sx={{ color: "white", marginTop: "16px" }}
-          >
+          <Typography variant="h6" sx={{ color: "white", marginTop: "16px" }}>
             Loading...
           </Typography>
         </Box>
@@ -109,7 +115,7 @@ export const AllMenuCategories = () => {
                 }}
               >
                 <Card
-                  onClick={() => handleCardClick(item?.menuId, item?.categoryId)}
+                  onClick={() => handleCardClick(item)}
                   sx={{
                     width: { xs: "120px", sm: "140px", md: "160px" },
                     height: { xs: "120px", sm: "140px", md: "160px" },

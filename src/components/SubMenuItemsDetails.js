@@ -1,226 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Grid, Card, Typography, Box, CardContent } from "@mui/material";
 import "../../src/styles/dashboard.css";
-import menu1 from "../../src/assets/menuitems/menu.jpeg";
 import menu_1 from "../../src/assets/dashboard/menu1.png";
-import menu2 from "../../src/assets/menuitems/menu2.png";
+import itemsmenu2 from "../../src/assets/dashboard/image-removebg-preview.png";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-
-const menuItems = [
-  {
-    id: 1,
-    category: "Spicy Biryani",
-    image: menu1,
-    name: "Birayani",
-    email: "Jhon@gmail.com",
-    mobile: "666666987654",
-    description: "Neque porro quisquam",
-    price: "11$",
-    allergens: "02",
-    varients: "Medium",
-    extras: "Veggies",
-    subCategories: [
-      {
-        id: 1,
-        cat_name: "Chicken Biryani",
-        image: menu1,
-        description: "Spicy chicken biryani",
-        price: "12$",
-        dish: "Abc",
-        category: "Spicy Biryani",
-        menu_item: "Menu 1",
-        varients: "Medium",
-        allergens: "02",
-        extra: "Veggies",
-      },
-      {
-        id: 2,
-        cat_name: "Veg Biryani",
-        image: menu2,
-        description: "Delicious veg biryani",
-        price: "10$",
-        dish: "Abc",
-        category: "Spicy Biryani",
-        menu_item: "Menu 1",
-        varients: "Small",
-        allergens: "02",
-        extra: "Veggies 1",
-      },
-    ],
-  },
-  {
-    id: 2,
-    category: "Biryani",
-    image: menu1,
-    name: "Prathe",
-    email: "Julia@gmail.com",
-    mobile: "666666987654",
-    description: "Neque porro quisquam",
-    price: "11$",
-    allergens: "02",
-    varients: "Medium",
-    extras: "Veggies",
-    subCategories: [
-      {
-        id: 1,
-        cat_name: "Mutton Biryani",
-        image: menu2,
-        description: "Rich mutton biryani",
-        price: "14$",
-        dish: "Abc",
-        category: "Spicy Biryani",
-        menu_item: "Menu 1",
-        allergens: "02",
-        varients: "Medium",
-        extra: "Veggies",
-      },
-      {
-        id: 2,
-        cat_name: "Egg Biryani",
-        image: menu2,
-        description: "Egg biryani with spices",
-        price: "9$",
-        dish: "Abc",
-        category: "Spicy Biryani",
-        menu_item: "Menu 1",
-        allergens: "02",
-        varients: "Medium",
-        extra: "Veggies",
-      },
-    ],
-  },
-  {
-    id: 3,
-    category: "Chicken",
-    image: menu2,
-    name: "Marry James",
-    email: "Marryjames@gmail.com",
-    mobile: "987654466666",
-    description: "Neque porro quisquam",
-    price: "11$",
-    allergens: "02",
-    varients: "Medium",
-    extras: "Veggies",
-    subCategories: [
-      {
-        id: 1,
-        cat_name: "Grilled Chicken",
-        image: menu2,
-        description: "Grilled to perfection",
-        price: "13$",
-        dish: "Abc",
-        category: "Spicy Biryani",
-        menu_item: "Menu 1",
-        allergens: "02",
-        varients: "Medium",
-        extra: "Veggies",
-      },
-      {
-        id: 2,
-        cat_name: "Fried Chicken",
-        image: menu2,
-        description: "Crispy fried chicken",
-        price: "11$",
-        dish: "Abc",
-        category: "Spicy Biryani",
-        menu_item: "Menu 1",
-        allergens: "02",
-        varients: "Medium",
-        extra: "Veggies",
-      },
-    ],
-  },
-  {
-    id: 4,
-    category: "Paneer",
-    image: menu1,
-    name: "Mark",
-    email: "Mark@gmail.com",
-    mobile: "666666987654",
-    description: "Neque porro quisquam",
-    price: "11$",
-    allergens: "02",
-    varients: "Medium",
-    extras: "Veggies",
-    subCategories: [
-      {
-        id: 1,
-        cat_name: "Paneer Butter Masala",
-        image: menu2,
-        description: "Creamy paneer masala",
-        price: "12$",
-        dish: "Abc",
-        category: "Spicy Biryani",
-        menu_item: "Menu 1",
-        allergens: "02",
-        varients: "Medium",
-        extra: "Veggies",
-      },
-      {
-        id: 2,
-        cat_name: "Paneer Tikka",
-        image: menu2,
-        description: "Grilled paneer tikka",
-        price: "13$",
-        dish: "Abc",
-        category: "Spicy Biryani",
-        menu_item: "Menu 1",
-        allergens: "02",
-        varients: "Medium",
-        extra: "Veggies",
-      },
-    ],
-  },
-  {
-    id: 5,
-    category: "Roll",
-    image: menu1,
-    name: "Birayani",
-    email: "Jhon@gmail.com",
-    mobile: "666666987654",
-    description: "Neque porro quisquam",
-    price: "11$",
-    allergens: "02",
-    varients: "Medium",
-    extras: "Veggies",
-    subCategories: [
-      {
-        id: 1,
-        cat_name: "Chicken Roll",
-        image: menu2,
-        description: "Tasty chicken roll",
-        price: "8$",
-        dish: "Abc",
-        category: "Spicy Biryani",
-        menu_item: "Menu 1",
-        allergens: "02",
-        varients: "Medium",
-        extra: "Veggies",
-      },
-      {
-        id: 2,
-        cat_name: "Paneer Roll",
-        image: menu2,
-        description: "Delicious paneer roll",
-        price: "7$",
-        dish: "Abc",
-        category: "Spicy Biryani",
-        menu_item: "Menu 1",
-        allergens: "02",
-        varients: "Medium",
-        extra: "Veggies",
-      },
-    ],
-  },
-];
 
 export const SubMenuItemsDetails = () => {
   const [recentMenuItems, setRecentMenuItems] = useState([]);
   const location = useLocation();
-  const topRecentItems = location.state.topRecentItems;
+  const { topRecentItems } = location.state || {};
+  console.log(topRecentItems, 'topRecentItems--------');
   const menuId = topRecentItems?.menuId;
   const categoryId = topRecentItems?.categoryId;
 
@@ -247,20 +39,22 @@ export const SubMenuItemsDetails = () => {
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchTopRecentCategoryItems();
   }, []);
 
   const fetchTopRecentCategoryItems = async () => {
     try {
       const response = await axios.get(
-        `https://viamenu.oa.r.appspot.com/viamenu/clients/${storedClientId}/menus/${menuId}/categories/${categoryId}/items/topRecent`);
-      console.log(response?.data?.data);
+        `https://viamenu.oa.r.appspot.com/viamenu/clients/${storedClientId}/menus/${menuId}/categories/${categoryId}/items/all`
+        // `https://viamenu.oa.r.appspot.com/viamenu/clients/${storedClientId}/menus/${menuId}/categories/${categoryId}/items/topRecent`
+      );
+      console.log(response?.data?.data, 'items menu');
       setRecentMenuItems(response?.data?.data);
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const handleCardClick = (categoryDetails) => {
     navigate("/home/recent-menu-details", { state: { categoryDetails } });
@@ -327,7 +121,7 @@ export const SubMenuItemsDetails = () => {
                         fontWeight: "bold",
                       }}
                     >
-                      {topRecentItems?.menuName || 'N/A'}
+                      {topRecentItems?.categoryName || "N/A"}
                     </Typography>
                     <Typography
                       sx={{
@@ -336,7 +130,7 @@ export const SubMenuItemsDetails = () => {
                         fontWeight: "bold",
                       }}
                     >
-                      {topRecentItems?.categoryName || 'N/A'}
+                      {topRecentItems?.categoryName || "N/A"}
                     </Typography>
                     <Typography
                       sx={{
@@ -345,7 +139,7 @@ export const SubMenuItemsDetails = () => {
                         fontWeight: "bold",
                       }}
                     >
-                      06
+                       {topRecentItems?.sortedIndex || 0}
                     </Typography>
                     <Typography
                       sx={{
@@ -354,8 +148,7 @@ export const SubMenuItemsDetails = () => {
                         fontWeight: "bold",
                       }}
                     >
-                      Neque porro quisquam est qui dolorem ipsum quia dolor sit
-                      amet, consectetur, adipisci velit
+                      {topRecentItems?.description || 'N/A'}
                     </Typography>
                   </Box>
                 </Grid>
@@ -410,7 +203,7 @@ export const SubMenuItemsDetails = () => {
           spacing={2}
           sx={{ display: "flex", flexWrap: "nowrap" }}
         >
-          {menuItems.map((item, index) => (
+          {recentMenuItems?.map((item, index) => (
             <Grid
               item
               xs={12}
@@ -445,8 +238,8 @@ export const SubMenuItemsDetails = () => {
                   sx={{ padding: 1 }}
                 >
                   <img
-                    src={item.image}
-                    alt={item.title}
+                    src={item?.imageUrl || itemsmenu2}
+                    alt={item?.itemId}
                     style={{
                       width: "100%",
                       height: "100%",
@@ -474,7 +267,7 @@ export const SubMenuItemsDetails = () => {
                       fontSize: "17px",
                     }}
                   >
-                    {item.category}
+                    {item?.mainItemText}
                   </Typography>
                 </CardContent>
               </Card>
