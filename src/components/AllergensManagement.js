@@ -24,6 +24,7 @@ import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { AddAllergens } from "./AddAllergens";
 import axios from "axios";
 import { Navbar } from "./Navbar";
+import { Search } from "./Search";
 
 export const AllergensManagement = () => {
   const [allAllergens, setAllAllergens] = useState([]);
@@ -125,12 +126,12 @@ export const AllergensManagement = () => {
 
   return (
     <Box>
-      <Navbar
+      {/* <Navbar
         open={open}
         handleDrawerOpen={() => setOpen(true)}
         handleSearch={handleSearch}
         showSearch={true}
-      />
+      /> */}
       <Box
         sx={{
           display: "flex",
@@ -141,27 +142,32 @@ export const AllergensManagement = () => {
         <Typography variant="h6" fontWeight="bold" sx={{ color: "white" }}>
           Allergens Management
         </Typography>
-        <Button
-          variant="outlined"
-          onClick={() => {
-            setEditingAllergen(null);
-            setOpenAddAllergensDialog(true);
-          }}
-          sx={{
-            color: "#567241",
-            fontWeight: "bold",
-            borderColor: "#567241",
-            textTransform: "none",
-          }}
-        >
-          Add Allergens
-        </Button>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Box sx={{ marginRight: "5px" }}>
+            <Search handleSearch={handleSearch} />
+          </Box>
+          <Button
+            variant="outlined"
+            onClick={() => {
+              setEditingAllergen(null);
+              setOpenAddAllergensDialog(true);
+            }}
+            sx={{
+              color: "#567241",
+              fontWeight: "bold",
+              borderColor: "#567241",
+              textTransform: "none",
+            }}
+          >
+            Add Allergens
+          </Button>
+        </Box>
       </Box>
 
       <Box
         sx={{
           display: "flex",
-          flexDirection: "column", 
+          flexDirection: "column",
           height: "100%",
         }}
       >

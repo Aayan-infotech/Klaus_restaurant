@@ -108,7 +108,7 @@ export const SubMenuCategory = () => {
                     }}
                   >
                     <img
-                      src={menu2}
+                      src={item?.imageUrl || menu2}
                       alt={item?.title}
                       style={{
                         width: "100%",

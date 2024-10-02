@@ -51,23 +51,23 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 const Drawer = styled(MuiDrawer, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
+  shouldForwardProp: (prop) => prop !== "navOpen",
+})(({ theme, navOpen }) => ({
   width: drawerWidth,
   flexShrink: 0,
   whiteSpace: "nowrap",
   boxSizing: "border-box",
-  ...(open && {
+  ...(navOpen && {
     ...openedMixin(theme),
     "& .MuiDrawer-paper": openedMixin(theme),
   }),
-  ...(!open && {
+  ...(!navOpen && {
     ...closedMixin(theme),
     "& .MuiDrawer-paper": closedMixin(theme),
   }),
 }));
 
-export const Sidebar = ({ open, handleDrawerClose }) => {
+export const Sidebar = ({ navOpen, handleDrawerClose }) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
@@ -98,7 +98,7 @@ export const Sidebar = ({ open, handleDrawerClose }) => {
     <>
       <Drawer
         variant="permanent"
-        open={open}
+        navOpen={navOpen}
         sx={{
           backgroundColor: "#1f1d2b",
           color: "white",
@@ -147,7 +147,7 @@ export const Sidebar = ({ open, handleDrawerClose }) => {
                     px: 2.5,
                     backgroundColor: currentPath === item.path ? "#3A493C" : "inherit", 
                   },
-                  open
+                  navOpen
                     ? {
                         justifyContent: "initial",
                       }
@@ -166,7 +166,7 @@ export const Sidebar = ({ open, handleDrawerClose }) => {
                       justifyContent: "center",
                       color: currentPath === item.path ? "#90BE6D" : "white",
                     },
-                    open
+                    navOpen
                       ? {
                           mr: 3,
                         }
@@ -185,7 +185,7 @@ export const Sidebar = ({ open, handleDrawerClose }) => {
                     },
                   }}
                   sx={[
-                    open
+                    navOpen
                       ? {
                           opacity: 1,
                         }

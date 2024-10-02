@@ -12,7 +12,7 @@ export const Search = ({ handleSearch }) => {
       sx={{
         backgroundColor: "#373642",
         borderRadius: 1,
-        padding: "5px 10px",
+        padding: "2px 10px",
         display: "flex",
         alignItems: "center",
       }}

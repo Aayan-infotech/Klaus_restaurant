@@ -6,7 +6,7 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
-  CircularProgress
+  CircularProgress,
 } from "@mui/material";
 import axios from "axios";
 
@@ -20,9 +20,10 @@ export const AddUser = ({ onAddUser, userToEdit, onClose, storedClientId }) => {
   const [gender, setGender] = useState("");
   const [notes, setNotes] = useState("");
   const [loading, setLoading] = useState(false);
+  const [emailError, setEmailError] = useState("");
 
   useEffect(() => {
-    console.log(userToEdit);
+    console.log(userToEdit, 'userToEdit');
     if (userToEdit) {
       setUsername(userToEdit.login || "");
       setPassword(userToEdit.password || "");
@@ -33,6 +34,16 @@ export const AddUser = ({ onAddUser, userToEdit, onClose, storedClientId }) => {
       setNotes(userToEdit.notes || "");
     }
   }, [userToEdit]);
+
+  const validateEmail = (value) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; 
+    if (!emailRegex.test(value)) {
+      setEmailError("Please enter a valid email address");
+    } else {
+      setEmailError("");
+    }
+    setEmail(value);
+  };
 
   const handleAddOrUpdate = async (e) => {
     e.preventDefault();
@@ -163,7 +174,9 @@ export const AddUser = ({ onAddUser, userToEdit, onClose, storedClientId }) => {
               variant="outlined"
               size="small"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => validateEmail(e.target.value)}
+              error={!!emailError} 
+              helperText={emailError}
               sx={{
                 flex: 2,
                 "& .MuiOutlinedInput-root": {
@@ -183,7 +196,13 @@ export const AddUser = ({ onAddUser, userToEdit, onClose, storedClientId }) => {
               variant="outlined"
               size="small"
               value={mobile}
-              onChange={(e) => setMobile(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (/^\d*$/.test(value)) {
+                  setMobile(value);
+                }
+              }}
+              type="text"
               sx={{
                 flex: 2,
                 "& .MuiOutlinedInput-root": {

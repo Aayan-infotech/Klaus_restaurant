@@ -1,5 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Grid, Card, Typography, Box, CardContent } from "@mui/material";
+import {
+  Grid,
+  Card,
+  Typography,
+  Box,
+  CardContent,
+  CircularProgress,
+} from "@mui/material";
 import "../../src/styles/dashboard.css";
 import menu_1 from "../../src/assets/dashboard/menu1.png";
 import itemsmenu2 from "../../src/assets/dashboard/image-removebg-preview.png";
@@ -10,9 +17,9 @@ import axios from "axios";
 
 export const SubMenuItemsDetails = () => {
   const [recentMenuItems, setRecentMenuItems] = useState([]);
+  const [loading, setLoading] = useState(true);
   const location = useLocation();
   const { topRecentItems } = location.state || {};
-  console.log(topRecentItems, 'topRecentItems--------');
   const menuId = topRecentItems?.menuId;
   const categoryId = topRecentItems?.categoryId;
 
@@ -46,11 +53,10 @@ export const SubMenuItemsDetails = () => {
   const fetchTopRecentCategoryItems = async () => {
     try {
       const response = await axios.get(
-        `https://viamenu.oa.r.appspot.com/viamenu/clients/${storedClientId}/menus/${menuId}/categories/${categoryId}/items/all`
-        // `https://viamenu.oa.r.appspot.com/viamenu/clients/${storedClientId}/menus/${menuId}/categories/${categoryId}/items/topRecent`
+        `https://viamenu.oa.r.appspot.com//viamenu/clients/${storedClientId}/menus/${menuId}/categories/${categoryId}/categoryWithItems`
       );
-      console.log(response?.data?.data, 'items menu');
-      setRecentMenuItems(response?.data?.data);
+      console.log(response?.data?.data?.items, "items menu");
+      setRecentMenuItems(response?.data?.data?.items);
     } catch (error) {
       console.log(error);
     }
@@ -73,7 +79,7 @@ export const SubMenuItemsDetails = () => {
         <Grid container spacing={1}>
           <Grid item xs={12} md={3}>
             <img
-              src={topRecentItems?.image || menu_1}
+              src={topRecentItems?.imageUrl || menu_1}
               alt="j"
               style={{
                 width: "100%",
@@ -139,7 +145,7 @@ export const SubMenuItemsDetails = () => {
                         fontWeight: "bold",
                       }}
                     >
-                       {topRecentItems?.sortedIndex || 0}
+                      {topRecentItems?.sortedIndex || 0}
                     </Typography>
                     <Typography
                       sx={{
@@ -148,7 +154,7 @@ export const SubMenuItemsDetails = () => {
                         fontWeight: "bold",
                       }}
                     >
-                      {topRecentItems?.description || 'N/A'}
+                      {topRecentItems?.description || "N/A"}
                     </Typography>
                   </Box>
                 </Grid>
@@ -198,82 +204,97 @@ export const SubMenuItemsDetails = () => {
         }}
         ref={scrollRef}
       >
-        <Grid
-          container
-          spacing={2}
-          sx={{ display: "flex", flexWrap: "nowrap" }}
-        >
-          {recentMenuItems?.map((item, index) => (
-            <Grid
-              item
-              xs={12}
-              sm={6}
-              md={3}
-              key={index}
-              sx={{ flex: "0 0 auto" }}
-            >
-              <Card
-                onClick={() => handleCardClick(item)}
-                style={{
-                  width: "160px",
-                  height: "160px",
-                  borderRadius: "20px",
-                  backgroundColor: "#1F1D2B",
-                  textAlign: "center",
-                  color: "white",
-                  position: "relative",
-                  overflow: "visible",
-                  marginTop: "20px",
-                }}
+        {recentMenuItems?.length > 0 ? (
+          <Grid
+            container
+            spacing={2}
+            sx={{ display: "flex", flexWrap: "nowrap" }}
+          >
+            {recentMenuItems.map((item, index) => (
+              <Grid
+                item
+                xs={12}
+                sm={6}
+                md={3}
+                key={index}
+                sx={{ flex: "0 0 auto" }}
               >
-                <div
+                <Card
+                  onClick={() => handleCardClick(item)}
                   style={{
-                    position: "absolute",
-                    top: "-20px",
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    width: "100px",
-                    height: "100px",
+                    width: "160px",
+                    height: "160px",
+                    borderRadius: "20px",
+                    backgroundColor: "#1F1D2B",
+                    textAlign: "center",
+                    color: "white",
+                    position: "relative",
+                    overflow: "visible",
+                    marginTop: "20px",
                   }}
-                  sx={{ padding: 1 }}
                 >
-                  <img
-                    src={item?.imageUrl || itemsmenu2}
-                    alt={item?.itemId}
+                  <div
                     style={{
-                      width: "100%",
-                      height: "100%",
-                      borderRadius: "50%",
-                      objectFit: "cover",
+                      position: "absolute",
+                      top: "-20px",
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      width: "100px",
+                      height: "100px",
                     }}
-                  />
-                </div>
-                <CardContent
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    height: "100%",
-                    padding: 0,
-                  }}
-                >
-                  <Typography
+                    sx={{ padding: 1 }}
+                  >
+                    <img
+                      src={item?.imageUrl || itemsmenu2}
+                      alt={item?.itemId}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </div>
+                  <CardContent
                     style={{
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
                       height: "100%",
-                      marginTop: "60px",
-                      fontSize: "17px",
+                      padding: 0,
                     }}
                   >
-                    {item?.mainItemText}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
+                    <Typography
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: "100%",
+                        marginTop: "60px",
+                        fontSize: "17px",
+                      }}
+                    >
+                      {item?.mainItemText}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        ) : (
+          <Typography
+            sx={{
+              textAlign: "center",
+              color: "white",
+              marginTop: 2,
+              fontSize: "18px",
+              fontWeight:"bold",
+              textAlign:"center"
+            }}
+          >
+            No available menu items
+          </Typography>
+        )}
       </Box>
     </Box>
   );

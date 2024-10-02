@@ -5,22 +5,22 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import Typography from "@mui/material/Typography";
-// import SearchIcon from "@mui/icons-material/Search";
-// import { Box, TextField } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import { Box, TextField } from "@mui/material";
 import { useLocation } from "react-router-dom";
-import { Search } from "./Search";
+// import { Search } from "./Search";
 
 const drawerWidth = 300;
 
 const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
+  shouldForwardProp: (prop) => prop !== "navOpen",
+})(({ theme, navOpen }) => ({
   zIndex: theme.zIndex.drawer + 1,
   transition: theme.transitions.create(["width", "margin"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  ...(open && {
+  ...(navOpen && {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
     transition: theme.transitions.create(["width", "margin"], {
@@ -36,7 +36,9 @@ const formatBreadcrumb = (segment) => {
     .replace(/\b\w/g, (char) => char.toUpperCase());
 };
 
-export const Navbar = ({ open, handleDrawerOpen, handleSearch, showSearch }) => {
+export const Navbar = ({ navOpen, handleDrawerOpen, handleSearch, showSearch }) => {
+  console.log(handleDrawerOpen, 'handleDrawerOpen');
+
   const location = useLocation();
   const currentPath = location.pathname;
 
@@ -46,7 +48,7 @@ export const Navbar = ({ open, handleDrawerOpen, handleSearch, showSearch }) => 
   return (
     <AppBar
       position="fixed"
-      open={open}
+      navOpen={navOpen}
       elevation={0}
       sx={{
         backgroundColor: "#272437",
@@ -62,7 +64,7 @@ export const Navbar = ({ open, handleDrawerOpen, handleSearch, showSearch }) => 
             {
               marginRight: 5,
             },
-            open && { display: "none" },
+            navOpen && { display: "none" },
           ]}
         >
           <MenuIcon />
@@ -76,7 +78,25 @@ export const Navbar = ({ open, handleDrawerOpen, handleSearch, showSearch }) => 
         >
           {breadcrumb}
         </Typography>
-        {showSearch && <Search handleSearch={handleSearch} />}
+        {/* <Box
+          sx={{
+            backgroundColor: "#373642",
+            borderRadius: 1,
+            padding: "5px 10px",
+            display:"flex", alignItems:"center"
+          }}
+        >
+          <SearchIcon sx={{marginRight:"5px"}}/>
+          <TextField
+            placeholder="Search for food, coffee, etc..."
+            variant="standard"
+            InputProps={{
+              disableUnderline: true,
+              style: { color: "white" },
+            }}
+          />
+        </Box> */}
+        {/* {showSearch && <Search handleSearch={handleSearch} />} */}
       </Toolbar>
     </AppBar>
   );

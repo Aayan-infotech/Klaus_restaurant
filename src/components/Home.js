@@ -6,19 +6,22 @@ import { Outlet } from "react-router-dom";
 
 export const Home = () => {
   const [open, setOpen] = React.useState(false);
+  const [navOpen, setNavOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {
-    setOpen(true);
+    // setOpen(true);
+    setNavOpen(true)
   };
 
   const handleDrawerClose = () => {
-    setOpen(false);
+    // setOpen(false);
+    setNavOpen(false)
   };
 
   return (
     <Box sx={{ display: "flex" }}>
-      <Navbar open={open} handleDrawerOpen={handleDrawerOpen} />
-      <Sidebar open={open} handleDrawerClose={handleDrawerClose} />
+      <Navbar navOpen={navOpen} handleDrawerOpen={handleDrawerOpen} />
+      <Sidebar navOpen={navOpen} handleDrawerClose={handleDrawerClose} />
       <Box
         component="main"
         sx={{

@@ -32,6 +32,7 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Navbar } from "./Navbar";
+import { Search } from "./Search";
 
 export const ManagerManagement = () => {
   const [open, setOpen] = useState(false);
@@ -47,6 +48,7 @@ export const ManagerManagement = () => {
 
   const navigate = useNavigate();
   const storedClientId = localStorage.getItem("clientId");
+  // console.log(storedClientId, 'storedClientId');
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -56,7 +58,6 @@ export const ManagerManagement = () => {
   };
 
   const handleTogglePassword = (managerId) => {
-    console.log(managerId, "managerId");
     setPasswordVisibility((prevState) => ({
       ...prevState,
       [managerId]: !prevState[managerId],
@@ -70,7 +71,7 @@ export const ManagerManagement = () => {
 
   const handleClose = () => {
     setOpen(false);
-    // setManagers(null);
+    setManagers(null);
   };
 
   const handleAddUser = (user) => {
@@ -83,6 +84,10 @@ export const ManagerManagement = () => {
     setEditingUser(manager);
     setOpenAddUserDialog(true);
   };
+
+  useEffect(() => {
+    fetchAllManagers();
+  }, []);
 
   const fetchAllManagers = async () => {
     try {
@@ -101,9 +106,6 @@ export const ManagerManagement = () => {
       setLoading(false);
     }
   };
-  useEffect(() => {
-    fetchAllManagers();
-  }, []);
 
   // Step : Filter managers based on search query
   const handleSearch = (searchTerm) => {
@@ -186,12 +188,10 @@ export const ManagerManagement = () => {
   return (
     <Box>
       <ToastContainer />
-      <Navbar
-        open={open}
-        handleDrawerOpen={() => setOpen(true)}
+      {/* <Navbar
         handleSearch={handleSearch}
         showSearch={true}
-      />
+      /> */}
       <Box
         sx={{
           display: "flex",
@@ -202,18 +202,23 @@ export const ManagerManagement = () => {
         <Typography variant="h6" fontWeight="bold" sx={{ color: "white" }}>
           Manager Management
         </Typography>
-        <Button
-          variant="outlined"
-          onClick={() => setOpenAddUserDialog(true)}
-          sx={{
-            color: "#567241",
-            fontWeight: "bold",
-            borderColor: "#567241",
-            textTransform: "none",
-          }}
-        >
-          Add User
-        </Button>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Box sx={{ marginRight: "5px" }}>
+            <Search handleSearch={handleSearch} />
+          </Box>
+          <Button
+            variant="outlined"
+            onClick={() => setOpenAddUserDialog(true)}
+            sx={{
+              color: "#567241",
+              fontWeight: "bold",
+              borderColor: "#567241",
+              textTransform: "none",
+            }}
+          >
+            Add User
+          </Button>
+        </Box>
       </Box>
 
       <Box

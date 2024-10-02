@@ -18,13 +18,13 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { Navbar } from "./Navbar";
+import { Search } from "./Search";
 
 export const MenuManagement = () => {
   const [allMenus, setAllMenus] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const [filteredMenus, setFilteredMenus] = useState([]);
-  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
   const storedClientId = localStorage.getItem("clientId");
@@ -85,19 +85,23 @@ export const MenuManagement = () => {
 
   return (
     <Box>
-      <Navbar
-        open={open}
-        handleDrawerOpen={() => setOpen(true)}
-        handleSearch={handleSearch}
-        showSearch={true}
-      />
-      <Typography variant="h6" fontWeight="bold" sx={{ color: "white" }}>
-        Menu Management
-      </Typography>
+      {/* <Navbar handleSearch={handleSearch} showSearch={true} /> */}
       <Box
         sx={{
           display: "flex",
-          flexDirection: "column", 
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Typography variant="h6" fontWeight="bold" sx={{ color: "white" }}>
+          Menu Management
+        </Typography>
+        <Search handleSearch={handleSearch} />
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
           height: "100%",
         }}
       >
@@ -121,7 +125,7 @@ export const MenuManagement = () => {
             <Box
               sx={{
                 overflowY: "auto",
-                maxHeight: "450px", 
+                maxHeight: "50vh",
                 scrollbarWidth: "none",
               }}
             >

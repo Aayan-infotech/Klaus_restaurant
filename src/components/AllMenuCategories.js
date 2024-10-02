@@ -22,9 +22,7 @@ export const AllMenuCategories = () => {
   const storedClientId = localStorage.getItem("clientId");
 
   const handleCardClick = (item) => {
-    // console.log(item, "item----------");
     navigate("/home/sub-category", { state: { allCategery: item } });
-    // navigate(`/home/sub-category/${menuId}/${categoryId}`);
   };
 
   useEffect(() => {
@@ -139,8 +137,8 @@ export const AllMenuCategories = () => {
                     }}
                   >
                     <img
-                      src={item.image || menu2}
-                      alt={item.category}
+                      src={item?.imageUrl || menu2}
+                      alt={item?.category}
                       style={{
                         width: "100%",
                         height: "100%",

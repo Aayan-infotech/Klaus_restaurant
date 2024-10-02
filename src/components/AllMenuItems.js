@@ -68,11 +68,6 @@ export const AllMenuItems = () => {
     navigate("/home/recent-submenu", { state: { topRecentItems: category } });
   };
 
-  // const handleCardClick = (category) => {
-  //   console.log(category, 'category');
-  //   navigate(`/home/recent-submenu/${category?.categoryId}?menuId=${category?.menuId}&categoryId=${category.categoryId}`);
-  // };
-
   return (
     <Box>
       <Box sx={{ marginTop: 1 }}>
