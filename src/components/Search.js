@@ -19,7 +19,7 @@ export const Search = ({ handleSearch }) => {
     >
       <SearchIcon sx={{ marginRight: "5px" }} />
       <TextField
-        placeholder="Search for food, coffee, etc..."
+        placeholder="Search"
         variant="standard"
         InputProps={{
           disableUnderline: true,

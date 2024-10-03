@@ -94,7 +94,7 @@ export const Sidebar = ({ navOpen, handleDrawerClose }) => {
     { text: "Logout", path: "", icon: <LogoutIcon />, onClick: handleLogoutClick },
   ];
 
-  return (
+  return (  
     <>
       <Drawer
         variant="permanent"
@@ -102,7 +102,7 @@ export const Sidebar = ({ navOpen, handleDrawerClose }) => {
         sx={{
           backgroundColor: "#1f1d2b",
           color: "white",
-          "& .MuiDrawer-paper": {
+          "& .MuiDrawer-paper": { 
             backgroundColor: "#1f1d2b",
             color: "white",
           },
@@ -125,7 +125,7 @@ export const Sidebar = ({ navOpen, handleDrawerClose }) => {
                 component="div"
                 color="#90BE6D"
               >
-                Klausl
+                Klaus
               </Typography>
             {/* </Link> */}
             <IconButton onClick={handleDrawerClose}>
