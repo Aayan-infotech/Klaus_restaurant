@@ -9,6 +9,7 @@ export const RecentMenuDetails = () => {
   const [categoryVarient, setCategoryVarient] = useState(null);
   const [categoryExtras, setCategoryExtras] = useState(null);
   const [categoryName, setCcategoryName] = useState(null);
+  const [menuname, setMenuname] = useState(null);
   const [loading, setLoading] = useState(true);
   const location = useLocation();
   const recentList = location.state?.categoryDetails;
@@ -23,6 +24,7 @@ export const RecentMenuDetails = () => {
       fetchCatVarietnsDetails();
       fetchAllExtra();
       fetchCategoryDetails();
+      fetchMenuName();
     }
   }, [menuid, categoryId]);
 
@@ -94,8 +96,21 @@ export const RecentMenuDetails = () => {
       const response = await axios.get(
         `https://viamenu.oa.r.appspot.com/viamenu/clients/${storedClientId}/menus/${recentList?.menuId}/categories/${recentList?.categoryId}`
       );
-      console.log(response?.data?.data, "response?.data?.data");
       setCcategoryName(response?.data?.data);
+    } catch (error) {
+      console.error("Error fetching menu details:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchMenuName = async () => {
+    try {
+      const response = await axios.get(
+        `https://viamenu.oa.r.appspot.com/viamenu/clients/${storedClientId}/menus/${recentList?.menuId}`
+      );
+      // console.log(response?.data?.data?.menuName, 'menu name')
+      setMenuname(response?.data?.data);
     } catch (error) {
       console.error("Error fetching menu details:", error);
     } finally {
@@ -195,9 +210,9 @@ export const RecentMenuDetails = () => {
                   <Typography sx={{ marginTop: 2, fontWeight: "bold" }}>
                     Category
                   </Typography>
-                  {/* <Typography sx={{ marginTop: 2, fontWeight: "bold" }}>
+                  <Typography sx={{ marginTop: 2, fontWeight: "bold" }}>
                     Menu Name
-                  </Typography> */}
+                  </Typography>
                   <Typography sx={{ marginTop: 2, fontWeight: "bold" }}>
                     Extras
                   </Typography>
@@ -226,11 +241,11 @@ export const RecentMenuDetails = () => {
                   >
                     {categoryName?.categoryName || "N/A"}
                   </Typography>
-                  {/* <Typography
+                  <Typography
                     sx={{ marginTop: 2, color: "#90BE6D", fontWeight: "bold" }}
                   >
-                    {categoryExtras?.menu_item || "N/A"}
-                  </Typography> */}
+                    {menuname?.menuName || 'N/A'}
+                  </Typography>
                   <Typography
                     sx={{ marginTop: 2, color: "#90BE6D", fontWeight: "bold" }}
                   >
