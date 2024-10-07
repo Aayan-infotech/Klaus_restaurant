@@ -17,6 +17,7 @@ import axios from "axios";
 
 export const SubMenuItemsDetails = () => {
   const [recentMenuItems, setRecentMenuItems] = useState([]);
+  const [menuname, setMenuname] = useState(null);
   const [loading, setLoading] = useState(true);
   const location = useLocation();
   const { topRecentItems } = location.state || {};
@@ -48,6 +49,7 @@ export const SubMenuItemsDetails = () => {
 
   useEffect(() => {
     fetchTopRecentCategoryItems();
+    fetchTopMenuName();
   }, []);
 
   const fetchTopRecentCategoryItems = async () => {
@@ -55,8 +57,18 @@ export const SubMenuItemsDetails = () => {
       const response = await axios.get(
         `https://viamenu.oa.r.appspot.com//viamenu/clients/${storedClientId}/menus/${menuId}/categories/${categoryId}/categoryWithItems`
       );
-      console.log(response?.data?.data?.items, "items menu");
       setRecentMenuItems(response?.data?.data?.items);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchTopMenuName = async () => {
+    try {
+      const response = await axios.get(
+        `https://viamenu.oa.r.appspot.com/viamenu/clients/${storedClientId}/menus/menu_5`
+      );
+      setMenuname(response?.data?.data);
     } catch (error) {
       console.log(error);
     }
@@ -127,7 +139,7 @@ export const SubMenuItemsDetails = () => {
                         fontWeight: "bold",
                       }}
                     >
-                      {topRecentItems?.categoryName || "N/A"}
+                      {menuname?.menuName || "N/A"}
                     </Typography>
                     <Typography
                       sx={{

@@ -6,7 +6,10 @@ import axios from "axios";
 
 export const RecentMenuDetails = () => {
   const [categoryMenuDetails, setCategoryMenuDetails] = useState(null);
-  const [loading, setLoading] = useState(true); 
+  const [categoryVarient, setCategoryVarient] = useState(null);
+  const [categoryExtras, setCategoryExtras] = useState(null);
+  const [categoryName, setCcategoryName] = useState(null);
+  const [loading, setLoading] = useState(true);
   const location = useLocation();
   const recentList = location.state?.categoryDetails;
   const menuid = recentList?.menuId;
@@ -17,6 +20,9 @@ export const RecentMenuDetails = () => {
   useEffect(() => {
     if (menuid && categoryId) {
       fetchCatMenuDetails();
+      fetchCatVarietnsDetails();
+      fetchAllExtra();
+      fetchCategoryDetails();
     }
   }, [menuid, categoryId]);
 
@@ -29,7 +35,71 @@ export const RecentMenuDetails = () => {
     } catch (error) {
       console.error("Error fetching menu details:", error);
     } finally {
-      setLoading(false); // Set loading to false after fetching data
+      setLoading(false);
+    }
+  };
+
+  const fetchCatVarietnsDetails = async () => {
+    try {
+      const response = await axios.get(
+        `https://viamenu.oa.r.appspot.com/viamenu/clients/${storedClientId}/menus/${recentList?.menuId}/categories/${recentList?.categoryId}/items/${recentList?.itemId}/variants/all`
+      );
+      getVarientDetails(response?.data?.data[0]?.variantId);
+    } catch (error) {
+      console.error("Error fetching menu details:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const getVarientDetails = async (vat_id) => {
+    try {
+      const response = await axios.get(
+        `https://viamenu.oa.r.appspot.com/viamenu/clients/${storedClientId}/menus/${recentList?.menuId}/categories/${recentList?.categoryId}/items/${recentList?.itemId}/variants/${vat_id}`
+      );
+      setCategoryVarient(response?.data?.data);
+    } catch (error) {
+      console.error("Error fetching menu details:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchAllExtra = async () => {
+    try {
+      const response = await axios.get(
+        `https://viamenu.oa.r.appspot.com/viamenu/clients/${storedClientId}/menus/${recentList?.menuId}/categories/${recentList?.categoryId}/items/${recentList?.itemId}/extras/all`
+      );
+      getExtrasDetails(response?.data?.data[0]?.extraId);
+    } catch (error) {
+      console.error("Error fetching menu details:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const getExtrasDetails = async (extas_id) => {
+    try {
+      const response = await axios.get(
+        `https://viamenu.oa.r.appspot.com/viamenu/clients/${storedClientId}/menus/${recentList?.menuId}/categories/${recentList?.categoryId}/items/${recentList?.itemId}/extras/${extas_id}`
+      );
+      setCategoryExtras(response?.data?.data);
+    } catch (error) {
+      console.error("Error fetching menu details:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchCategoryDetails = async () => {
+    try {
+      const response = await axios.get(
+        `https://viamenu.oa.r.appspot.com/viamenu/clients/${storedClientId}/menus/${recentList?.menuId}/categories/${recentList?.categoryId}`
+      );
+      console.log(response?.data?.data, "response?.data?.data");
+      setCcategoryName(response?.data?.data);
+    } catch (error) {
+      console.error("Error fetching menu details:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -60,7 +130,8 @@ export const RecentMenuDetails = () => {
               fontWeight="bold"
               sx={{ flexGrow: 1 }}
             >
-              {categoryMenuDetails?.mainItemText || categoryMenuDetails?.category}
+              {categoryMenuDetails?.mainItemText ||
+                categoryMenuDetails?.category}
             </Typography>
           </Grid>
           <Grid
@@ -124,11 +195,14 @@ export const RecentMenuDetails = () => {
                   <Typography sx={{ marginTop: 2, fontWeight: "bold" }}>
                     Category
                   </Typography>
-                  <Typography sx={{ marginTop: 2, fontWeight: "bold" }}>
+                  {/* <Typography sx={{ marginTop: 2, fontWeight: "bold" }}>
                     Menu Name
+                  </Typography> */}
+                  <Typography sx={{ marginTop: 2, fontWeight: "bold" }}>
+                    Extras
                   </Typography>
                   <Typography sx={{ marginTop: 2, fontWeight: "bold" }}>
-                    Allergens
+                    Variants
                   </Typography>
                   <Typography sx={{ marginTop: 2, fontWeight: "bold" }}>
                     Description
@@ -150,17 +224,22 @@ export const RecentMenuDetails = () => {
                   <Typography
                     sx={{ marginTop: 2, color: "#90BE6D", fontWeight: "bold" }}
                   >
-                    {categoryMenuDetails?.category || "N/A"}
+                    {categoryName?.categoryName || "N/A"}
+                  </Typography>
+                  {/* <Typography
+                    sx={{ marginTop: 2, color: "#90BE6D", fontWeight: "bold" }}
+                  >
+                    {categoryExtras?.menu_item || "N/A"}
+                  </Typography> */}
+                  <Typography
+                    sx={{ marginTop: 2, color: "#90BE6D", fontWeight: "bold" }}
+                  >
+                    {categoryExtras?.name || "N/A"}
                   </Typography>
                   <Typography
                     sx={{ marginTop: 2, color: "#90BE6D", fontWeight: "bold" }}
                   >
-                    {categoryMenuDetails?.menu_item || "N/A"}
-                  </Typography>
-                  <Typography
-                    sx={{ marginTop: 2, color: "#90BE6D", fontWeight: "bold" }}
-                  >
-                    {categoryMenuDetails?.allergens || "N/A"}
+                    {categoryVarient?.name || "N/A"}
                   </Typography>
                   <Typography
                     sx={{ marginTop: 2, color: "#90BE6D", fontWeight: "bold" }}

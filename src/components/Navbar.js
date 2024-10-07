@@ -37,7 +37,6 @@ const formatBreadcrumb = (segment) => {
 };
 
 export const Navbar = ({ navOpen, handleDrawerOpen, handleSearch, showSearch }) => {
-  console.log(handleDrawerOpen, 'handleDrawerOpen');
 
   const location = useLocation();
   const currentPath = location.pathname;
