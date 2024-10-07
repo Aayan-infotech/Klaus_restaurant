@@ -66,7 +66,7 @@ export const SubMenuItemsDetails = () => {
   const fetchTopMenuName = async () => {
     try {
       const response = await axios.get(
-        `https://viamenu.oa.r.appspot.com/viamenu/clients/${storedClientId}/menus/menu_5`
+        `https://viamenu.oa.r.appspot.com/viamenu/clients/${storedClientId}/menus/${menuId}`
       );
       setMenuname(response?.data?.data);
     } catch (error) {
