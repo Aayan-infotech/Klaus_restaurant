@@ -305,8 +305,8 @@ export const ManagerManagement = () => {
                               <FontAwesomeIcon
                                 icon={
                                   passwordVisibility[manager?.managerId]
-                                    ? faEye
-                                    : faEyeSlash
+                                    ? faEyeSlash
+                                    : faEye
                                 }
                               />
                             </Button>

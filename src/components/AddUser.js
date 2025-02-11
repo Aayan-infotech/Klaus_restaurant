@@ -23,7 +23,6 @@ export const AddUser = ({ onAddUser, userToEdit, onClose, storedClientId }) => {
   const [emailError, setEmailError] = useState("");
 
   useEffect(() => {
-    console.log(userToEdit, 'userToEdit');
     if (userToEdit) {
       setUsername(userToEdit.login || "");
       setPassword(userToEdit.password || "");
@@ -36,7 +35,7 @@ export const AddUser = ({ onAddUser, userToEdit, onClose, storedClientId }) => {
   }, [userToEdit]);
 
   const validateEmail = (value) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(value)) {
       setEmailError("Please enter a valid email address");
     } else {
@@ -47,6 +46,20 @@ export const AddUser = ({ onAddUser, userToEdit, onClose, storedClientId }) => {
 
   const handleAddOrUpdate = async (e) => {
     e.preventDefault();
+    if (
+      !username ||
+      !password ||
+      !name ||
+      !email ||
+      !mobile ||
+      isNaN(mobile) ||
+      mobile.length !== 10
+    ) {
+      alert(
+        "All fields are required."
+      );
+      return;
+    }
     const payload = {
       login: username,
       password,
@@ -175,7 +188,7 @@ export const AddUser = ({ onAddUser, userToEdit, onClose, storedClientId }) => {
               size="small"
               value={email}
               onChange={(e) => validateEmail(e.target.value)}
-              error={!!emailError} 
+              error={!!emailError}
               helperText={emailError}
               sx={{
                 flex: 2,
@@ -271,11 +284,17 @@ export const AddUser = ({ onAddUser, userToEdit, onClose, storedClientId }) => {
         >
           {loading ? (
             <>
-              <CircularProgress size={20} color="inherit" sx={{ marginRight: 1 }} />
+              <CircularProgress
+                size={20}
+                color="inherit"
+                sx={{ marginRight: 1 }}
+              />
               {userToEdit ? "Updating..." : "Saving..."}
             </>
+          ) : userToEdit ? (
+            "Update User"
           ) : (
-            userToEdit ? "Update User" : "Add User"
+            "Add User"
           )}
         </Button>
         <Button

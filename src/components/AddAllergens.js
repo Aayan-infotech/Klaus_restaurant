@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { DialogContent, TextField, Button, Box, Switch, CircularProgress } from "@mui/material";
+import {
+  DialogContent,
+  TextField,
+  Button,
+  Box,
+  Switch,
+  CircularProgress,
+} from "@mui/material";
 import axios from "axios";
 
 export const AddAllergens = ({ onSave, allergen, onClose, storedClientId }) => {
@@ -19,10 +26,14 @@ export const AddAllergens = ({ onSave, allergen, onClose, storedClientId }) => {
 
   const handleSave = async (e) => {
     e.preventDefault();
+    if (!allergenName || !abbreviation) {
+      alert("Please fill out required fields: allergenName and abbreviation.");
+      return;
+    }
     const payload = {
       allergenName,
       abbreviation,
-      status
+      status,
     };
     setLoading(true);
     try {
@@ -130,11 +141,17 @@ export const AddAllergens = ({ onSave, allergen, onClose, storedClientId }) => {
         >
           {loading ? (
             <>
-              <CircularProgress size={20} color="inherit" sx={{ marginRight: 1 }} />
+              <CircularProgress
+                size={20}
+                color="inherit"
+                sx={{ marginRight: 1 }}
+              />
               {allergen ? "Updating..." : "Saving..."}
             </>
+          ) : allergen ? (
+            "Update"
           ) : (
-            allergen ? "Update" : "Save"
+            "Save"
           )}
         </Button>
         <Button
